@@ -7,6 +7,16 @@ import datetime
 matriz_personas = personas.generar_matriz_personas(5)
 matriz_tareas = tareas.generar_matriz_tareas(5)
 
+#Matriz de asignaciones
+def imprimir_matriz_gestion(matriz_personas: list, matriz_tareas: list, matriz_asignaciones: list):
+    tabla=["nombre_completo", "tareas", "descripcion_tarea", "fecha_limite", "pendiente", "en_proceso", "finalizada", "retrasada"]
+    print(f"{tabla[0]:^25} | {tabla[1]:^7} | {tabla[2]:^40} | {tabla[3]:^12} | {tabla[4]:^10} | {tabla[5]:^10} | {tabla[6]:^10} | {tabla[7]:^10}".upper().replace("_"," "))
+    
+    for i in range(1, len(matriz_asignaciones)):
+        nombre_completo = f"{matriz_personas[i][1]} {matriz_personas[i][2]}"
+        cantidad_tareas = f"{len(matriz_asignaciones[i][2])}"
+        print(f"{nombre_completo} {cantidad_tareas}")
+
 def menu():
     while True:
         print("\n--- MENU PRINCIPAL ---")
