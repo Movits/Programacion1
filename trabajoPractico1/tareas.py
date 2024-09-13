@@ -11,7 +11,7 @@ def validar_matriz_tareas(matriz):
     if not isinstance(matriz, list):
         print("ERROR FATAL: El elemento ingresado como lista no es una lista.")
         lista_valida = False
-    elif matriz[0] != ["id", "descripción", "fecha límite"]:
+    elif matriz[0] != ["id", "descripción", "fecha límite", "estado"]:
         print("ERROR FATAL: La matriz ingresada no es una matriz de tareas.")
         lista_valida = False
     return lista_valida
@@ -28,7 +28,7 @@ def validar_fecha(fecha: datetime.date):
     while fecha < datetime.date.today():
         print(f"¡Atención!: La fecha ingresada es inválida. No se puede ingresar una fecha anterior al día de hoy, {datetime.date.today()}")
         fecha_corregida = input("Ingrese la fecha nuevamente. Formato DD/MM/AAAA: ")
-        fecha = datetime.datetime.strptime(fecha_corregida, "%d-%m-%Y").date()
+        fecha = datetime.datetime.strptime(fecha_corregida, "%d/%m/%Y").date()
     return fecha_valida, fecha
 
 '''
@@ -65,14 +65,9 @@ Retorno: Matriz con las tareas, sus fechas límite y el estado en que se encuent
 '''
 def generar_matriz_tareas(cantidad):
     tareas = [["id", "descripción", "fecha límite", "estado"]]
-    estados = ["pendiente", "en proceso", "finalizada"]
     for i in range(cantidad):
-
-        tarea = generar_tarea()
-        fecha_limite = generar_fecha()
-        estado = estados[random.randint(0, 2)]
-
-        tareas.append([len(tareas), tarea, fecha_limite, estado])
+        estado = random.choice(["pendiente", "en proceso", "finalizada"])
+        tareas.append([len(tareas), generar_tarea(), generar_fecha(), estado])
     return tareas
 
 '''
@@ -82,7 +77,8 @@ Retorno: Nulo.
 def crear_tarea(matriz: list, tarea: str, fecha:  datetime.date):
     fecha_valida, fecha_corregida = validar_fecha(fecha)
     if validar_matriz_tareas(matriz) and fecha_valida:
-        matriz.append([matriz[len(matriz)-1][0]+1, tarea, fecha_corregida])
+        estado = "pendiente"
+        matriz.append([matriz[len(matriz)-1][0]+1, tarea, fecha_corregida, estado])
 
 '''
 Descripción: Edita la descripción y fecha de una tarea en base al ID dado
@@ -92,7 +88,7 @@ def actualizar_tarea(matriz: list, id: str):
     id_valido, posicion = funciones_propias.validar_id(matriz, id)
     if validar_matriz_tareas(matriz) and id_valido:
         tarea = input("Ingrese la descripción de la tarea: ")
-        fecha = datetime.datetime.strptime(input("Ingrese la fecha límite de la tarea. Formato DD-MM-AAAA: "), "%d-%m-%Y").date()
+        fecha = datetime.datetime.strptime(input(" Formato DD/MM/AAAA: "), "%d/%m/%Y").date()
         fecha_valida, fecha_ = validar_fecha(fecha)
         if fecha_valida:
             matriz[posicion][1], matriz[posicion][2] = tarea, fecha
