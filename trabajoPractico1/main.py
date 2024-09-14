@@ -26,9 +26,10 @@ def menu():
         print("4. Eliminar persona")
         print("5. Ver tareas")
         print("6. Crear tarea")
-        print("7. Actualizar tarea")
-        print("8. Eliminar tarea")
-        print("9. Salir")
+        print("7. Buscar tarea por fecha")
+        print("8. Actualizar tarea")
+        print("9. Eliminar tarea")
+        print("0. Salir")
 
         opcion = input("Elige una opcion: ")
 
@@ -51,12 +52,15 @@ def menu():
             crear_tarea()
             volver_o_salir()
         elif opcion == '7':
-            actualizar_tarea()
+            buscar_tareas()
             volver_o_salir()
         elif opcion == '8':
-            eliminar_tarea()
+            actualizar_tarea()
             volver_o_salir()
         elif opcion == '9':
+            eliminar_tarea()
+            volver_o_salir()
+        elif opcion == '0':
             print("Saliendo del programa...")
             break
         else:
@@ -105,6 +109,18 @@ def eliminar_tarea():
     id_tarea = int(input("Ingresa el ID de la tarea a eliminar: "))
     tareas.eliminar_tarea(matriz_tareas, id_tarea)
 
+def buscar_tareas():
+    fecha_inicio = input("Ingresa la fecha de inicio (DD/MM/AAAA): ")
+    fecha_fin = input("Ingresa la fecha de fin (DD/MM/AAAA): ")
+    tareas_en_rango = tareas.buscar_tareas_por_fecha(matriz_tareas, fecha_inicio, fecha_fin)
+
+    if tareas_en_rango:
+        print("Tareas encontradas en el rango de fechas:")
+        for tarea in tareas_en_rango:
+            print(tarea)
+    else:
+        print("No se encontraron tareas en el rango de fechas especificado.")
+
 
 def volver_o_salir():
     while True:
@@ -121,5 +137,6 @@ def volver_o_salir():
             exit()
         else:
             print("Opción no válida, por favor elige nuevamente.")
+
 
 menu()
