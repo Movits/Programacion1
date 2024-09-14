@@ -41,7 +41,6 @@ contextos = ["en la oficina","para el cliente","con el equipo","en línea","para
  
 generar_tarea = lambda: f"{random.choice(acciones)} {random.choice(objetos)} {random.choice(contextos)}"
  
-
 '''
 Descripción: Generea una fecha aleatoria entre los 15 días anteriores y los 60 días posteriores a la actualidad.
 Retorno: Fecha de tipo datetime.
@@ -53,11 +52,6 @@ def generar_fecha():
     fecha_maxima = hoy + datetime.timedelta(days = 60)
     fecha = random.uniform(fecha_minima, fecha_maxima)
     return fecha
-
-'''
-Descripción: Genera una matriz con una cantidad solicitada de tareas, y sus fechas límite.
-Retorno: Matriz con las tareas y sus fechas límite.
-'''
 
 '''
 Descripción: Genera una matriz con una cantidad solicitada de tareas, sus fechas límite y un estado aleatorio.
@@ -110,8 +104,13 @@ def buscar_tareas_por_fecha(matriz, fecha_inicio, fecha_fin):
     if not validar_matriz_tareas(matriz):
         print("La matriz de tareas no es válida.")
         return []
+    
+    fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%d/%m/%Y").date()
+    fecha_fin = datetime.datetime.strptime(fecha_fin, "%d/%m/%Y").date()
+
     fecha_inicio_valida, fecha_inicio_corregida = validar_fecha(fecha_inicio)
     fecha_fin_valida, fecha_fin_corregida = validar_fecha(fecha_fin)
+
     if not (fecha_inicio_valida and fecha_fin_valida):
         print("Una o ambas fechas ingresadas son inválidas.")
         return []
