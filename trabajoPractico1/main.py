@@ -110,6 +110,7 @@ def menu():
             crear_asignacion()
             volver_o_salir()
         elif opcion == '12':
+            ver_personas()
             actualizar_asignacion()
             volver_o_salir()
         elif opcion == '13':
