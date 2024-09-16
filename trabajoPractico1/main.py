@@ -54,7 +54,7 @@ def imprimir_matriz_gestion(matriz_personas: list, matriz_tareas: list, matriz_a
                 print(f"{nombre_completo:^25} | {total_tareas:^7} | {'':^40} | {'':^12} | {estados['Pendiente']:^10} | {estados['En proceso']:^10} | {estados['Finalizada']:^10} | {estados['Retrasada']:^10}")
 
                 for descripcion_tarea, fecha_limite in detalles_tareas :
-                    print(f"{'':^25} | {'':^7} | {descripcion_tarea:^40} | {fecha_limite:^12} | {'':^10} | {'':^10} | {'':^10} | {'':^10}")
+                    print(f"{'':^25} | {'':^7} | {descripcion_tarea[:36] + '...' if len(descripcion_tarea) > 36 else descripcion_tarea:^40} | {fecha_limite:^12} | {'':^10} | {'':^10} | {'':^10} | {'':^10}")
 
 def menu():
     while True:
