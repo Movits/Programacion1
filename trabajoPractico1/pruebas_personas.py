@@ -1,38 +1,39 @@
-import random
 import personas
-import funciones_propias
 
 #NOTA PARA EL PROFESOR:
 #La lógica de una aplicación CRUD está aplicada en su mayoría en las funciones del archivo "personas.py". El archivo "funciones_propias.py" contiene funciones que usé en otras oportuniades, pero creo que son importantes para su inclusión aquí.
 
-matriz = personas.generar_matriz_personas(4)
+diccionario = personas.generar_diccionario_personas(4)
 
-for fila in matriz:
-    print(fila)
+print("GENERACIÓN")
+for key, valor in diccionario.items():
+    print(f"{key}, {valor}")
 print()
 
-personas.crear_persona(matriz, "Tiago", "Nicolaisen")
+personas.crear_persona(diccionario, "Tiago", "Nicolaisen")
 
-for fila in matriz:
-    print(fila)
+print("CREACIÓN")
+for key, valor in diccionario.items():
+    print(f"{key}, {valor}")
 print()
 
-personas.actualizar_persona(matriz, 3, "Silvina", "Oliva")
+personas.actualizar_persona(diccionario, 15, "Silvina", "Oliva")
 
-for fila in matriz:
-    print(fila)
+print("ACTUALIZACIÓN")
+for key, valor in diccionario.items():
+    print(f"{key}, {valor}")
 print()
 
-personas.eliminar_persona(matriz,7)
+personas.eliminar_persona(diccionario,1)
 
-for fila in matriz:
-    print(fila)
+print("ELIMINACIÓN")
+for key, valor in diccionario.items():
+    print(f"{key}, {valor}")
 print()
 
-personas.crear_persona(matriz, "Diego3", "Nicolaisen")
+personas.crear_persona(diccionario, "Diego", "Nicolaisen")
 
-for fila in matriz:
-    print(fila)
+print("VERIFICACIÓN DEL COMPORTAMIENTO DEL ID POS ELIMINACIÓN")
+for key, valor in diccionario.items():
+    print(f"{key}, {valor}")
 print()
-
-funciones_propias.imprimir_matriz(matriz)

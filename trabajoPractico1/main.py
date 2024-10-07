@@ -5,7 +5,7 @@ import asignaciones
 import datetime
 import random
 
-matriz_personas = personas.generar_matriz_personas(5)
+matriz_personas = personas.generar_diccionario_personas(5)
 matriz_tareas = tareas.generar_matriz_tareas(5)
 matriz_asignaciones = asignaciones.generar_matriz_asignaciones(matriz_personas, matriz_tareas)
 
