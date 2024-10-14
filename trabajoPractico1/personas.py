@@ -1,4 +1,5 @@
 import random
+import string
 
 def validar_diccionario_personas(diccionario: dict):
     """La función `validar_diccionario_personas` verifica si un elemento es de tipo `dict` y si éste a su vez representa personas.
@@ -70,8 +71,21 @@ def generar_diccionario_personas(cantidad: int):
     nombres = ["juan","maría","carlos","ana","pedro","laura","josé","marta","luis","sofía"]
     apellidos = ["garcía","lópez","martínez","pérez","rodríguez","sánchez","ramírez","torres","gómez","fernández"]
     diccionario_personas = {0: "personas"}
+    
     for i in range(1, cantidad + 1):
-        diccionario_personas[i] = {"nombre_completo": (random.choice(nombres), random.choice(apellidos))}
+        nombre = random.choice(nombres)
+        apellido = random.choice(apellidos)
+        usuario = generar_usuario(nombre, apellido, diccionario_personas)
+        email = generar_email(nombre, apellido)
+        telefono = generar_telefono()
+        
+        diccionario_personas[i] = {
+            "nombre_completo": (nombre, apellido),
+            "usuario": usuario,
+            "email": email,
+            "telefono": telefono
+        }
+
     return diccionario_personas
 
 def crear_persona(diccionario: dict, nombre: str, apellido: str):
@@ -87,10 +101,19 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str):
     
     #Cargo los datos, de ser válida, en el diccionario.
     if validar_diccionario_personas(diccionario):
-        diccionario[len(diccionario)] = {"nombre_completo" : (nombre_, apellido_)}
+        usuario = generar_usuario(nombre_, apellido_, diccionario)
+        email = generar_email(nombre_, apellido_)
+        telefono = generar_telefono()
+        
+        diccionario[len(diccionario)] = {
+            "nombre_completo": (nombre_, apellido_),
+            "usuario": usuario,
+            "email": email,
+            "telefono": telefono
+        }
 
 def actualizar_persona(diccionario: dict,id: int, nombre: str,apellido: str):
-    """ La función `actualizar_persona` actualiza los datos nombre y apellido del elemento solicitado presente el el diccionario dado.
+    """ Actualiza el nombre y apellido de la persona con el ID dado en el diccionario.
 
     Args:
         diccionario (dict): Diccionario objetivo
@@ -98,21 +121,22 @@ def actualizar_persona(diccionario: dict,id: int, nombre: str,apellido: str):
         nombre (str): Nombre de la persona
         apellido (str): Apellido de la persona
     """    
-    id_ = id
     nombre_, apellido_ = validar_nombre_completo(nombre, apellido)
-    #Verifico el diccionario
+    
     if validar_diccionario_personas(diccionario):
-        #Verifico si el ID está presente en el diccionario.
-        if not(id in diccionario.keys()):
-            while not id_ in diccionario.keys():
-                print(f"ATENCIÓN: El ID '{id}' no se encuentra presente dentro del diccionario.")
-                id_ = input("Reingrese el ID: ")
-                print()
-        #Cambio el dato solicitado.
-        diccionario[id_] = {"nombre_completo": (nombre_, apellido_)}
+        if id not in diccionario:
+            print(f"Error: El ID '{id}' no se encuentra en el diccionario.")
+            return  # Return early to avoid updating a non-existent entry
+        
+        usuario = generar_usuario(nombre_, apellido_, diccionario)
+        email = generar_email(nombre_, apellido_)
+        
+        diccionario[id]["nombre_completo"] = (nombre_, apellido_)
+        diccionario[id]["usuario"] = usuario
+        diccionario[id]["email"] = email
 
 def eliminar_persona(diccionario: dict,id: int):
-    """La función `eliminar_persona` elimina la persona objetivo del diccionario otorgado en base a su ID dado.
+    """Elimina la persona con el ID dado del diccionario.
 
     Args:
         diccionario (dict): Diccionario objetivo
@@ -123,3 +147,34 @@ def eliminar_persona(diccionario: dict,id: int):
         if id in diccionario.keys():
             #Elimino el elemnto con el ID correspondiente
             diccionario.pop(id)
+        else: 
+            print(f"Error: El ID '{id}' no se encuentra en el diccionario.")
+            
+
+def generar_usuario(nombre: str, apellido: str, diccionario: dict):
+    
+    usuario_base = f"{nombre[0].lower()}{apellido.lower()}"
+    usuario = usuario_base
+    cont = 1
+    usuarios_existentes = set()
+    for persona in diccionario.values():
+        if isinstance(persona, dict) and "usuario" in persona:
+            usuarios_existentes.add(persona["usuario"])
+    while usuario in usuarios_existentes:
+        usuario = f"{usuario_base}{cont}"
+        cont += 1
+    return usuario
+
+def generar_contrasena():
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    contrasena = "".join(random.choices(caracteres, k=8))
+    return contrasena
+
+def generar_email(nombre: str, apellido: str):
+    dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"]
+    email = f"{nombre.lower()}.{apellido.lower()}@{random.choice(dominios)}"
+    return email
+
+def generar_telefono():
+    telefono = f"011-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
+    return telefono

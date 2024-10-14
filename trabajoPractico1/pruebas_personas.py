@@ -3,37 +3,66 @@ import personas
 #NOTA PARA EL PROFESOR:
 #La lógica de una aplicación CRUD está aplicada en su mayoría en las funciones del archivo "personas.py". El archivo "funciones_propias.py" contiene funciones que usé en otras oportuniades, pero creo que son importantes para su inclusión aquí.
 
+print("GENERACIÓN")
 diccionario = personas.generar_diccionario_personas(4)
 
-print("GENERACIÓN")
 for key, valor in diccionario.items():
-    print(f"{key}, {valor}")
+    if isinstance(valor, dict):
+        nombre_completo = " ".join(valor["nombre_completo"])
+        print(f"ID: {key}, Nombre Completo: {nombre_completo}, Usuario: {valor['usuario']}, "
+              f"Email: {valor['email']}, Teléfono: {valor['telefono']}")
+    else:
+        print(f"ID: {key}, Tipo: {valor}")
 print()
 
-personas.crear_persona(diccionario, "Tiago", "Nicolaisen")
 
 print("CREACIÓN")
-for key, valor in diccionario.items():
-    print(f"{key}, {valor}")
-print()
+personas.crear_persona(diccionario, "Tiago", "Nicolaisen")
 
-personas.actualizar_persona(diccionario, 15, "Silvina", "Oliva")
+for key, valor in diccionario.items():
+    if isinstance(valor, dict):
+        nombre_completo = " ".join(valor["nombre_completo"])
+        print(f"ID: {key}, Nombre Completo: {nombre_completo}, Usuario: {valor['usuario']}, "
+              f"Email: {valor['email']}, Teléfono: {valor['telefono']}")
+    else:
+        print(f"ID: {key}, Tipo: {valor}")
+print()
 
 print("ACTUALIZACIÓN")
-for key, valor in diccionario.items():
-    print(f"{key}, {valor}")
-print()
+id_para_actualizar = list(diccionario.keys())[1]
+personas.actualizar_persona(diccionario, 15, "Silvina", "Oliva")
 
-personas.eliminar_persona(diccionario,1)
+for key, valor in diccionario.items():
+    if isinstance(valor, dict):
+        nombre_completo = " ".join(valor["nombre_completo"])
+        print(f"ID: {key}, Nombre Completo: {nombre_completo}, Usuario: {valor['usuario']}, "
+              f"Email: {valor['email']}, Teléfono: {valor['telefono']}")
+    else:
+        print(f"ID: {key}, Tipo: {valor}")
+print()
 
 print("ELIMINACIÓN")
+id_para_eliminar = list(diccionario.keys())[1]
+personas.eliminar_persona(diccionario, id_para_eliminar)
+
 for key, valor in diccionario.items():
-    print(f"{key}, {valor}")
+    if isinstance(valor, dict):
+        nombre_completo = " ".join(valor["nombre_completo"])
+        print(f"ID: {key}, Nombre Completo: {nombre_completo}, Usuario: {valor['usuario']}, "
+              f"Email: {valor['email']}, Teléfono: {valor['telefono']}")
+    else:
+        print(f"ID: {key}, Tipo: {valor}")
 print()
 
-personas.crear_persona(diccionario, "Diego", "Nicolaisen")
 
 print("VERIFICACIÓN DEL COMPORTAMIENTO DEL ID POS ELIMINACIÓN")
+personas.crear_persona(diccionario, "Diego", "Nicolaisen")
+
 for key, valor in diccionario.items():
-    print(f"{key}, {valor}")
+    if isinstance(valor, dict):
+        nombre_completo = " ".join(valor["nombre_completo"])
+        print(f"ID: {key}, Nombre Completo: {nombre_completo}, Usuario: {valor['usuario']}, "
+              f"Email: {valor['email']}, Teléfono: {valor['telefono']}")
+    else:
+        print(f"ID: {key}, Tipo: {valor}")
 print()
