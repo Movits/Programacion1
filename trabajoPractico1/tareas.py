@@ -3,18 +3,18 @@ import datetime
 import funciones_propias
 
 '''
-Descripción: Verifica si una matriz otorgada es una matriz de tareas válida o no.
+Descripción: Verifica si un diccionario otorgado es un diccionario de tareas válido o no.
 Retorno: True o False.
 '''
-def validar_matriz_tareas(matriz):
-    lista_valida = True
-    if not isinstance(matriz, list):
-        print("ERROR FATAL: El elemento ingresado como lista no es una lista.")
-        lista_valida = False
-    elif matriz[0] != ["id", "descripción", "fecha límite", "estado"]:
-        print("ERROR FATAL: La matriz ingresada no es una matriz de tareas.")
-        lista_valida = False
-    return lista_valida
+def validar_diccionario_tareas(diccionario):
+    diccionario_valido = True
+    if not isinstance(diccionario, dict):
+        print("ERROR FATAL: El elemento ingresado como diccionario no es un diccionario.")
+        diccionario_valido = False
+    elif "tareas" not in diccionario or not isinstance(diccionario["tareas"], dict):
+        print("ERROR FATAL: El diccionario ingresado no es un diccionario de tareas.")
+        diccionario_valido = False
+    return diccionario_valido
 
 '''
 Descripción: Verifica si una fecha es válida o no.
@@ -54,55 +54,66 @@ def generar_fecha():
     return fecha
 
 '''
-Descripción: Genera una matriz con una cantidad solicitada de tareas, sus fechas límite y un estado aleatorio.
-Retorno: Matriz con las tareas, sus fechas límite y el estado en que se encuentra.
+Descripción: Genera un diccionario con una cantidad solicitada de tareas, sus fechas límite y un estado aleatorio.
+Retorno: Diccionario con las tareas, sus fechas límite y el estado en que se encuentra.
 '''
-def generar_matriz_tareas(cantidad):
-    tareas = [["id", "descripción", "fecha límite", "estado"]]
-    for i in range(cantidad):
+def generar_diccionario_tareas(cantidad):
+    diccionario_tareas = {"tareas": {}}
+    for i in range(1, cantidad + 1):
         estado = random.choice(["pendiente", "en proceso", "finalizada"])
-        tareas.append([len(tareas), generar_tarea(), generar_fecha(), estado])
-    return tareas
+        diccionario_tareas["tareas"][i] = {
+            "descripción": generar_tarea(),
+            "fecha_límite": generar_fecha(),
+            "estado": estado
+        }
+    return diccionario_tareas
 
 '''
-Descripción: Crea una nueva tarea en base a una matriz, descripción y fecha que se le otorguen, en caso de ser válidos los datos
+Descripción: Crea una nueva tarea en base a un diccionario, descripción y fecha que se le otorguen, en caso de ser válidos los datos.
 Retorno: Nulo.
 '''
-def crear_tarea(matriz: list, tarea: str, fecha:  datetime.date):
+
+def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date):
     fecha_valida, fecha_corregida = validar_fecha(fecha)
-    if validar_matriz_tareas(matriz) and fecha_valida:
+    if validar_diccionario_tareas(diccionario) and fecha_valida:
         estado = "pendiente"
-        matriz.append([matriz[len(matriz)-1][0]+1, tarea, fecha_corregida, estado])
+        nuevo_id = max(diccionario["tareas"].keys(), default=0) + 1
+        diccionario["tareas"][nuevo_id] = {
+            "descripción": tarea,
+            "fecha_límite": fecha_corregida,
+            "estado": estado
+        }
 
 '''
 Descripción: Edita la descripción y fecha de una tarea en base al ID dado
 Retorno: Nulo
 '''
-def actualizar_tarea(matriz: list, id: str):
-    id_valido, posicion = funciones_propias.validar_id(matriz, id)
-    if validar_matriz_tareas(matriz) and id_valido:
+def actualizar_tarea(diccionario: dict, id: str):
+    id_valido, posicion = funciones_propias.validar_id(diccionario["tareas"], id)
+    if validar_diccionario_tareas(diccionario) and id_valido:
         tarea = input("Ingrese la descripción de la tarea: ")
         fecha = datetime.datetime.strptime(input(" Formato DD/MM/AAAA: "), "%d/%m/%Y").date()
         fecha_valida, fecha_ = validar_fecha(fecha)
         if fecha_valida:
-            matriz[posicion][1], matriz[posicion][2] = tarea, fecha
+            diccionario["tareas"][id]["descripción"] = tarea
+            diccionario["tareas"][id]["fecha_límite"] = fecha_
 
 '''
 Descripción: Elimina una tarea en base a el ID otorgado de la misma
 Retorno: Nulo
 '''
-def eliminar_tarea(matriz: list, id: str):
-    id_valido, posicion = funciones_propias.validar_id(matriz, id)
-    if validar_matriz_tareas(matriz) and id_valido:
-        del matriz[posicion]
+def eliminar_tarea(diccionario: dict, id: str):
+    id_valido, posicion = funciones_propias.validar_id(diccionario["tareas"], id)
+    if validar_diccionario_tareas(diccionario) and id_valido:
+        diccionario["tareas"].pop(posicion)
 
 '''
 Descripción: La función bsca tareas en la matriz según el rango de fechas que el usuario indica
 Retorno:
 '''
-def buscar_tareas_por_fecha(matriz, fecha_inicio, fecha_fin):
-    if not validar_matriz_tareas(matriz):
-        print("La matriz de tareas no es válida.")
+def buscar_tareas_por_fecha(diccionario, fecha_inicio, fecha_fin):
+    if not validar_diccionario_tareas(diccionario):
+        print("El diccionario de tareas no es válido")
         return []
     
     fecha_inicio = datetime.datetime.strptime(fecha_inicio, "%d/%m/%Y").date()
@@ -115,9 +126,9 @@ def buscar_tareas_por_fecha(matriz, fecha_inicio, fecha_fin):
         print("Una o ambas fechas ingresadas son inválidas.")
         return []
     tareas_rango = []
-    for tarea in matriz[1:]:
-        fecha_tarea = tarea[2]
+    for id, tarea in diccionario["tareas"].items():
+        fecha_tarea = tarea["fecha_límite"]
         if fecha_inicio_corregida <= fecha_tarea <= fecha_fin_corregida:
             tareas_rango.append(tarea)
-    tareas_rango = sorted(tareas_rango, key=lambda x: x[2])
+    tareas_rango = sorted(tareas_rango, key=lambda x: x["fecha_límite"])
     return tareas_rango

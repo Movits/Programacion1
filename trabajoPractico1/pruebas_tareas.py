@@ -3,39 +3,47 @@ import tareas
 import datetime
 
 tarea = tareas.generar_tarea()
+print("TAREA GENERADA")
 print(tarea)
 print()
 
 fecha = tareas.generar_fecha()
+print("FECHA GENERADA")
 print(fecha)
 print()
 
-matriz = tareas.generar_matriz_tareas(5)
-for fila in matriz:
-    print(fila)
+diccionario_tareas = tareas.generar_diccionario_tareas(5)
+print("DICCIONARIO DE TAREAS GENERADO")
+for key, valor in diccionario_tareas["tareas"].items():
+    print(f"ID: {key}, Descripción: {valor['descripción']}, Fecha Límite: {valor['fecha_límite']}, Estado: {valor['estado']}")
 print()
 
-tareas.crear_tarea(matriz, "Ver la tele en el cuarto de Tiago", datetime.date(2024, 11, 12))
+tareas.crear_tarea(diccionario_tareas, "Ver la tele en el cuarto de Tiago", datetime.date(2024, 11, 12))
+print("TAREA CREADA")
 
-for fila in matriz:
-    print(fila)
+for key, valor in diccionario_tareas["tareas"].items():
+    print(f"ID: {key}, Descripción: {valor['descripción']}, Fecha Límite: {valor['fecha_límite']}, Estado: {valor['estado']}")
 print()
 
-tareas.actualizar_tarea(matriz, 3)
+tareas.actualizar_tarea(diccionario_tareas, 3)
+print("TAREA ACTUALIZADA")
 print()
 
-for fila in matriz:
-    print(fila)
+for key, valor in diccionario_tareas["tareas"].items():
+    print(f"ID: {key}, Descripción: {valor['descripción']}, Fecha Límite: {valor['fecha_límite']}, Estado: {valor['estado']}")
 print()
 
-funciones_propias.imprimir_matriz(matriz)
-
-tareas.eliminar_tarea(matriz, 1)
+tareas.eliminar_tarea(diccionario_tareas, 1)
+print("TAREA ELIMINADA")
+for key, valor in diccionario_tareas["tareas"].items():
+    print(f"ID: {key}, Descripción: {valor['descripción']}, Fecha Límite: {valor['fecha_límite']}, Estado: {valor['estado']}")
 print()
 
-funciones_propias.imprimir_matriz(matriz)
 
-tareas.crear_tarea(matriz, "Hacer la tarea de historia", datetime.date(2024, 10, 18))
+fecha_inicio = "01/10/2024"
+fecha_fin = "30/11/2024"
+tareas_en_rango = tareas.buscar_tareas_por_fecha(diccionario_tareas, fecha_inicio, fecha_fin)
+print(f"TAREAS ENTRE {fecha_inicio} Y {fecha_fin}")
+for tarea in tareas_en_rango:
+    print(f"Descripción: {tarea['descripción']}, Fecha Límite: {tarea['fecha_límite']}, Estado: {tarea['estado']}")
 print()
-
-funciones_propias.imprimir_matriz(matriz)

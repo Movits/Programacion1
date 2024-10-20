@@ -25,14 +25,8 @@ def imprimir_matriz(matriz):
 Descripción: Verifica si un ID está presente en una lista o no.
 Retorno: Booleano que determina si se lo encontró o no, y la posición de donde se encuentra (si no se encuentra, la posición es -1).
 '''
-def validar_id(matriz: list, id: int):
-    encontrado = False
-    posicion = -1
-    for i in range(1, len(matriz)):
-        if matriz[i][0] == id:
-            encontrado = True
-            posicion = i
-    if not encontrado:
-        print("¡ATENCIÓN!: No existe un usuario con ese id en la matriz que aportó.")
-        print()
-    return encontrado, posicion
+def validar_id(diccionario, id):
+    if id in diccionario:
+        return True, id
+    else:
+        return False, -1
