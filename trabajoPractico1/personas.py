@@ -70,7 +70,7 @@ def generar_diccionario_personas(cantidad: int):
     #En base a una dos listas de nombres y apellidos, se genera un diccionario con la cantidad de personas solicitadas. El ID corresponde al key de cada elemento del diccionario.
     nombres = ["juan","maría","carlos","ana","pedro","laura","josé","marta","luis","sofía"]
     apellidos = ["garcía","lópez","martínez","pérez","rodríguez","sánchez","ramírez","torres","gómez","fernández"]
-    diccionario_personas = {0: "personas"}
+    diccionario_personas = {0: "personas"} 
     
     for i in range(1, cantidad + 1):
         nombre = random.choice(nombres)
@@ -152,29 +152,60 @@ def eliminar_persona(diccionario: dict,id: int):
             
 
 def generar_usuario(nombre: str, apellido: str, diccionario: dict):
-    
     usuario_base = f"{nombre[0].lower()}{apellido.lower()}"
     usuario = usuario_base
     cont = 1
     usuarios_existentes = set()
-    for persona in diccionario.values():
+    for persona in diccionario.values(): #Recorro el diccionario para verificar si el usuario ya existe.
         if isinstance(persona, dict) and "usuario" in persona:
             usuarios_existentes.add(persona["usuario"])
-    while usuario in usuarios_existentes:
-        usuario = f"{usuario_base}{cont}"
+    while usuario in usuarios_existentes: 
+        usuario = f"{usuario_base}{cont}" 
         cont += 1
     return usuario
 
+
+def actualizar_usuario(diccionario: dict, id: int, nuevo_usuario: str):
+    usuarios_existentes = set()
+    for persona in diccionario.values():
+        if isinstance(persona, dict) and "usuario" in persona:
+            usuarios_existentes.add(persona["usuario"])
+    
+    if nuevo_usuario in usuarios_existentes:
+        raise ValueError(f"El nombre de usuario '{nuevo_usuario}' ya existe.")
+    
+    diccionario[id]["usuario"] = nuevo_usuario
+    
+        
+def eliminar_usuario(diccionario: dict, id: int):
+    diccionario[id].pop("usuario")
+    diccionario[id].pop("contrasena")
+    diccionario[id].pop("email")
+    diccionario[id].pop("telefono")
+    
+    
 def generar_contrasena():
     caracteres = string.ascii_letters + string.digits + string.punctuation
-    contrasena = "".join(random.choices(caracteres, k=8))
+    contrasena = "".join(random.choices(caracteres, k=8)) #8 caracteres
     return contrasena
+
+def actualizar_contrasena(diccionario: dict, id: int):
+    diccionario[id]["contrasena"] = generar_contrasena()
+    
 
 def generar_email(nombre: str, apellido: str):
     dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"]
     email = f"{nombre.lower()}.{apellido.lower()}@{random.choice(dominios)}"
     return email
 
+def actualizar_email(diccionario: dict, id: int):
+    nombre = diccionario[id]["nombre_completo"][0]
+    apellido = diccionario[id]["nombre_completo"][1]
+    diccionario[id]["email"] = generar_email(nombre, apellido)
+
 def generar_telefono():
     telefono = f"011-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
     return telefono
+
+def actualizar_telefono(diccionario: dict, id: int):
+    diccionario[id]["telefono"] = generar_telefono()
