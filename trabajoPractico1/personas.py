@@ -1,14 +1,15 @@
 import random
 import string
+import re
 
 def validar_diccionario_personas(diccionario: dict):
     """La función `validar_diccionario_personas` verifica si un elemento es de tipo `dict` y si éste a su vez representa personas.
 
     Args:
-        diccionario (dict): Diccionario de personas objetivo
+        diccionario (dict): Diccionario de personas objetivo.
 
     Returns:
-        True/False: Valor booleano que representa la validez del diccionario
+        True/False: Valor booleano que representa la validez del diccionario.
     """    
     valido = True
     if not isinstance(diccionario, dict):
@@ -78,12 +79,14 @@ def generar_diccionario_personas(cantidad: int):
         usuario = generar_usuario(nombre, apellido, diccionario_personas)
         email = generar_email(nombre, apellido)
         telefono = generar_telefono()
+        contrasenia = generar_contrasenia()
         
         diccionario_personas[i] = {
             "nombre_completo": (nombre, apellido),
             "usuario": usuario,
             "email": email,
-            "telefono": telefono
+            "telefono": telefono,
+            "contrasenia": contrasenia
         }
 
     return diccionario_personas
@@ -104,12 +107,14 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str):
         usuario = generar_usuario(nombre_, apellido_, diccionario)
         email = generar_email(nombre_, apellido_)
         telefono = generar_telefono()
+        contrasenia = generar_contrasenia()
         
         diccionario[len(diccionario)] = {
             "nombre_completo": (nombre_, apellido_),
             "usuario": usuario,
             "email": email,
-            "telefono": telefono
+            "telefono": telefono,
+            "contrasenia": contrasenia
         }
 
 def actualizar_persona(diccionario: dict,id: int, nombre: str,apellido: str):
@@ -179,33 +184,39 @@ def actualizar_usuario(diccionario: dict, id: int, nuevo_usuario: str):
         
 def eliminar_usuario(diccionario: dict, id: int):
     diccionario[id].pop("usuario")
-    diccionario[id].pop("contrasena")
+    diccionario[id].pop("contrasenia")
     diccionario[id].pop("email")
     diccionario[id].pop("telefono")
     
     
-def generar_contrasena():
+def generar_contrasenia():
     caracteres = string.ascii_letters + string.digits + string.punctuation
-    contrasena = "".join(random.choices(caracteres, k=8)) #8 caracteres
-    return contrasena
+    contrasenia = "".join(random.choices(caracteres, k=8)) #8 caracteres
+    return contrasenia
 
-def actualizar_contrasena(diccionario: dict, id: int):
-    diccionario[id]["contrasena"] = generar_contrasena()
-    
+def actualizar_contrasenia(diccionario: dict, id: int, contrasenia: str):
+    posee_caracter_especial = re.search(r"[!@#$%^&*]" ,contrasenia)
+    posee_numero = re.search(r"\d", contrasenia)
+    if posee_caracter_especial and posee_numero and len(contrasenia) >= 8:
+        diccionario[id]["contrasenia"] = contrasenia
+    else:
+        print("ATENCIÓN: La contraseña otorgada es inválida. Debe poseer 8 carácteres, conteniendo uno especial y un número.")
 
 def generar_email(nombre: str, apellido: str):
     dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"]
     email = f"{nombre.lower()}.{apellido.lower()}@{random.choice(dominios)}"
     return email
 
-def actualizar_email(diccionario: dict, id: int):
-    nombre = diccionario[id]["nombre_completo"][0]
-    apellido = diccionario[id]["nombre_completo"][1]
-    diccionario[id]["email"] = generar_email(nombre, apellido)
+def actualizar_email(diccionario: dict, id: int, email: str):
+    if re.match(r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}", email):
+        diccionario[id]["email"] = email
+    else:
+        print("ATENCIÓN: El email otorgado es inválido. Debe de tener el formato direccion@dominio.com.")
 
 def generar_telefono():
     telefono = f"011-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
     return telefono
 
-def actualizar_telefono(diccionario: dict, id: int):
-    diccionario[id]["telefono"] = generar_telefono()
+def actualizar_telefono(diccionario: dict, id: int, telefono: str):
+    if re.match(r"\d{3}-\d{4}-\d{4}", telefono):
+        diccionario[id]["telefono"] = telefono
