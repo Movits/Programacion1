@@ -26,7 +26,7 @@ for key, valor in diccionario_tareas["tareas"].items():
 print()
 
 tareas.actualizar_tarea(diccionario_tareas, 3)
-print("TAREA ACTUALIZADA")
+print("ACTUALIZACIÓN DE TAREA")
 print()
 
 for key, valor in diccionario_tareas["tareas"].items():
@@ -40,8 +40,8 @@ for key, valor in diccionario_tareas["tareas"].items():
 print()
 
 
-fecha_inicio = "01/10/2024"
-fecha_fin = "30/11/2024"
+fecha_inicio = datetime.datetime.today().strftime("%d/%m/%Y")
+fecha_fin = "30/12/2024"
 tareas_en_rango = tareas.buscar_tareas_por_fecha(diccionario_tareas, fecha_inicio, fecha_fin)
 print(f"TAREAS ENTRE {fecha_inicio} Y {fecha_fin}")
 for tarea in tareas_en_rango:

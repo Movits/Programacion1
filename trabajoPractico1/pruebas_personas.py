@@ -87,6 +87,7 @@ print("ELIMINACIÓN")
 id_para_eliminar = list(diccionario.keys())[1]
 personas.eliminar_persona(diccionario, id_para_eliminar)
 
+
 for key, valor in diccionario.items():
     if isinstance(valor, dict):
         nombre_completo = " ".join(valor["nombre_completo"])

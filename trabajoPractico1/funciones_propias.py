@@ -22,7 +22,7 @@ def imprimir_matriz(matriz):
         print()
         
 '''
-Descripción: Verifica si un ID está presente en una lista o no.
+Descripción: Verifica si un ID está presente en un dicc o no.
 Retorno: Booleano que determina si se lo encontró o no, y la posición de donde se encuentra (si no se encuentra, la posición es -1).
 '''
 def validar_id(diccionario, id):
