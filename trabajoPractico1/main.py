@@ -1,213 +1,97 @@
-import funciones_propias
 import personas
 import tareas
 import asignaciones
 import datetime
-import random
+import json
 
-matriz_personas = personas.generar_diccionario_personas(5)
-matriz_tareas = tareas.generar_matriz_tareas(5)
-matriz_asignaciones = asignaciones.generar_matriz_asignaciones(matriz_personas, matriz_tareas)
-
-def imprimir_matriz_gestion(matriz_personas: list, matriz_tareas: list, matriz_asignaciones: list):
-    tabla=["nombre_completo", "tareas", "descripcion_tarea", "fecha_limite", "pendiente", "en_proceso", "finalizada", "retrasada"]
-    print(f"{tabla[0]:^25} | {tabla[1]:^7} | {tabla[2]:^40} | {tabla[3]:^12} | {tabla[4]:^10} | {tabla[5]:^10} | {tabla[6]:^10} | {tabla[7]:^10}".upper().replace("_"," "))
-    
-    for persona in matriz_personas[1:]:
-        nombre_completo = f"{persona[1]} {persona[2]}"
-        
-        asignaciones_persona = []
-        for asignacion in matriz_asignaciones:
-            if asignacion[1] == persona[0]:
-                asignaciones_persona.append(asignacion)
-        
-        estados = {"Pendiente": 0, "En proceso": 0, "Finalizada": 0, "Retrasada": 0}
-        total_tareas = 0
-        
-        detalles_tareas = []
-        descripciones_tareas = []
-        fechas_limite = []
-        
-        for asignacion in asignaciones_persona:
-            ids_tareas = asignacion[2]     
-            estados = {"Pendiente": 0, "En proceso": 0, "Finalizada": 0, "Retrasada": 0}
-        
-            for id_tarea in ids_tareas:
-                tarea = []
-                for t in matriz_tareas:
-                    if t[0] == id_tarea:
-                        tarea = t
-                        
-                descripcion_tarea = tarea[1]
-                fecha_limite = tarea[2].strftime("%d/%m/%Y")
-                
-                estado = random.choice(["Pendiente", "En proceso", "Finalizada", "Retrasada"])
-                estados[estado] += 1
-                
-                descripciones_tareas.append(descripcion_tarea)
-                fechas_limite.append(fecha_limite)
-                
-                detalles_tareas.append((descripcion_tarea, fecha_limite))
-                total_tareas += 1
-                
-            if total_tareas >0:  
-                print(f"{nombre_completo.title():^25} | {total_tareas:^7} | {'':^40} | {'':^12} | {estados['Pendiente']:^10} | {estados['En proceso']:^10} | {estados['Finalizada']:^10} | {estados['Retrasada']:^10}")
-
-                for descripcion_tarea, fecha_limite in detalles_tareas :
-                    print(f"{'':^25} | {'':^7} | {descripcion_tarea[:36].capitalize() + '...' if len(descripcion_tarea) > 36 else descripcion_tarea.capitalize():^40} | {fecha_limite:^12} | {'':^10} | {'':^10} | {'':^10} | {'':^10}")
-
-def menu():
-    while True:
-        print("\n--- MENU PRINCIPAL ---")
-        print("1. Ver personas")
-        print("2. Crear persona")
-        print("3. Actualizar persona")
-        print("4. Eliminar persona")
-        print("5. Ver tareas")
-        print("6. Crear tarea")
-        print("7. Buscar tarea por fecha")
-        print("8. Actualizar tarea")
-        print("9. Eliminar tarea")
-        print("10.Ver asignaciones")
-        print("11.Crear asignacion")
-        print("12.Actualizar asignacion")
-        print("13.Eliminar asignacion")
-        print("0. Salir")
-
-        opcion = input("Elige una opcion: ")
-
-        if opcion == '1':
-            ver_personas()
-            volver_o_salir()
-        elif opcion == '2':
-            crear_persona()
-            volver_o_salir()
-        elif opcion == '3':
-            actualizar_persona()
-            volver_o_salir()
-        elif opcion == '4':
-            eliminar_persona()
-            volver_o_salir()
-        elif opcion == '5':
-            ver_tareas()
-            volver_o_salir()
-        elif opcion == '6':
-            crear_tarea()
-            volver_o_salir()
-        elif opcion == '7':
-            buscar_tareas()
-            volver_o_salir()
-        elif opcion == '8':
-            actualizar_tarea()
-            volver_o_salir()
-        elif opcion == '9':
-            eliminar_tarea()
-            volver_o_salir()
-        elif opcion == '10':
-            imprimir_matriz_gestion(matriz_personas, matriz_tareas, matriz_asignaciones)
-            volver_o_salir()
-        elif opcion == '11':
-            crear_asignacion()
-            volver_o_salir()
-        elif opcion == '12':
-            ver_personas()
-            actualizar_asignacion()
-            volver_o_salir()
-        elif opcion == '13':
-            eliminar_asignacion()
-            volver_o_salir()
-        elif opcion == '0':
-            print("Saliendo del programa...")
-            break
-        else:
-            print("Opción no válida, por favor elige nuevamente.")
-
-# Funciones auxiliares para manejar personas
-def ver_personas():
-    print("Matriz de las personas:")
-    funciones_propias.imprimir_matriz(matriz_personas)
-
-def crear_persona():
-    nombre = input("Ingresa el nombre de la persona: ")
-    apellido = input("Ingresa el apellido de la persona: ")
-    personas.crear_persona(matriz_personas, nombre, apellido)
-
-def actualizar_persona():
-    ver_personas()
-    id_persona = int(input("Ingresa el ID de la persona a actualizar: "))
-    nombre = input("Nuevo nombre: ")
-    apellido = input("Nuevo apellido: ")
-    personas.actualizar_persona(matriz_personas, id_persona, nombre, apellido)
-
-def eliminar_persona():
-    ver_personas()
-    id_persona = int(input("Ingresa el ID de la persona a eliminar: "))
-    personas.eliminar_persona(matriz_personas, id_persona)
-
-# Funciones auxiliares para manejar tareas
-def ver_tareas():
-    print("Matriz de las tareas:")
-    funciones_propias.imprimir_matriz(matriz_tareas)
-
-def crear_tarea():
-    descripcion = input("Descripción de la tarea: ")
-    fecha = input("Ingresa la fecha límite (DD/MM/AAAA): ")
-    fecha_límite = datetime.datetime.strptime(fecha, "%d/%m/%Y").date()
-    tareas.crear_tarea(matriz_tareas, descripcion, fecha_límite)
-
-def actualizar_tarea():
-    ver_tareas()
-    id_tarea = int(input("Ingresa el ID de la tarea a actualizar: "))
-    tareas.actualizar_tarea(matriz_tareas, id_tarea)
-
-def eliminar_tarea():
-    ver_tareas()
-    id_tarea = int(input("Ingresa el ID de la tarea a eliminar: "))
-    tareas.eliminar_tarea(matriz_tareas, id_tarea)
-
-def buscar_tareas():
-    fecha_inicio = input("Ingresa la fecha de inicio (DD/MM/AAAA): ")
-    fecha_fin = input("Ingresa la fecha de fin (DD/MM/AAAA): ")
-    tareas_en_rango = tareas.buscar_tareas_por_fecha(matriz_tareas, fecha_inicio, fecha_fin)
-
-    if tareas_en_rango:
-        print("Tareas encontradas en el rango de fechas:")
-        for tarea in tareas_en_rango:
-            print(tarea)
+def leer_archivo_personas():
+    # Se intenta la lectura del archivo personas.json. 
+    # De no existir el archivo, se generan los datos automáticamente. 
+    # Se aplica manejo de excepciones en todos los casos posibles de fallo de lectura/escritura del archivo json.
+    try:
+        with open("personas.json", "r", encoding="UTF-8") as arch_personas:
+            # Se leen los datos de personas.json y se los guarda en un diccionario
+            diccionario_personas = json.load(arch_personas)
+            print("Info: Se ha leído correctamente los datos del archivo personas.json")
+    except FileNotFoundError:
+        # Se generan los datos de forma alteatoria para el archivo personas.json y se los escribe en el mismo. 
+        print("Info: No se ha encontrado el archivo personas.json")
+        diccionario_personas = personas.generar_diccionario_personas(8)
+        try:
+            with open("personas.json", "w", encoding="UTF-8") as arch_personas:
+                #NOTA SOBRE ARGUMENTOS:
+                # El argumento indent sirve para establecer los espacios de tabulación en el archivo json
+                # El argumento ensure_ascii permite que existan dentro de este archivo carácteres pertenecientes a la lengua española, en este caso, por ejemplo, letras con tildación como la "á". 
+                json.dump(diccionario_personas, arch_personas, indent=4, ensure_ascii=False)
+                print("Info: Se ha generado el archivo personas.json con datos aleatorios.")
+        except OSError as error:
+            print(f"ERROR: No se ha podido generar el archivo personas.json por un error del sistema operativo: {error}")
+        except PermissionError as error:
+            print(f"ERROR: No se ha podido generar el archivo personas.json por falta de permisos del programa: {error}")
+        except:
+            print("ERROR: No se ha podido generar el archivo personas.json")
+    except OSError as error:
+        print(f"No se ha podido abrir el archivo personas.json por un error del sistema operativo: {error}")
+    except PermissionError as error:
+        print(f"ERROR: No se ha podido abrir el archivo personas.json por falta de permisos del programa: {error}")
+    except:
+        print("ERROR: No se ha podido abrir el archivo personas.json")
     else:
-        print("No se encontraron tareas en el rango de fechas especificado.")
+        #Convierto nuevamente el nombre completo a tupla si este fue leido como list en un archivo json.
+        for id, persona in diccionario_personas.items():
+            if isinstance(persona, dict): # Evita la lectura del elmento con ID 0 que representa el tipo del archivo.
+                if isinstance(persona.get("nombre_completo"), list):
+                    persona["nombre_completo"] = tuple(persona["nombre_completo"])
+    return diccionario_personas
 
-def crear_asignacion():
-    id_persona = int(input("Ingresa el ID de la persona: "))
-    num_tareas = int(input("Cuantas tareas quieres asignar? "))
-    ids_tareas = random.sample([tarea[0] for tarea in matriz_tareas[1:]], num_tareas)
-    asignaciones.crear_asignacion(matriz_asignaciones, id_persona, ids_tareas)
+def leer_archivo_tareas():
+    # Se intenta la lectura del archivo tareas.json. 
+    # De no existir el archivo, se generan los datos automáticamente. 
+    # Se aplica manejo de excepciones en todos los casos posibles de fallo de lectura/escritura del archivo json.
+    try:
+        with open("tareas.json", "r", encoding="UTF-8") as arch_tareas:
+            # Se leen los datos de tareas.json y se los guarda en un diccionario
+            diccionario_tareas = json.load(arch_tareas)
+            # NOTA: Se convierten las fechas en un formato legible por el módulo date.
+            for id, elemento in diccionario_tareas.items():
+                if isinstance(elemento, dict) and "fecha_límite" in elemento:
+                    elemento["fecha_límite"] = datetime.strptime(elemento['fecha_límite'], "%d-%m-%Y").date()
+            print("Info: Se ha leído correctamente los datos del archivo tareas.json")
+    except FileNotFoundError:
+        # Se generan los datos de forma alteatoria para el archivo tareas.json, se convierten las fechas a un formato legible para archivos json, y se los guarda. 
+        print("Info: No se ha encontrado el archivo tareas.json")
+        diccionario_tareas = tareas.generar_diccionario_tareas(4)
+        for id, elemento in diccionario_tareas.items():
+            if isinstance(elemento, dict) and "fecha_límite" in elemento:
+                elemento["fecha_límite"] = elemento["fecha_límite"].strftime("%d-%m-%Y")
+        try:
+            with open("tareas.json", "w", encoding="UTF-8") as arch_tareas:
+                # NOTA SOBRE ARGUMENTOS:
+                # El argumento indent sirve para establecer los espacios de tabulación en el archivo json
+                # El argumento ensure_ascii permite que existan dentro de este archivo carácteres pertenecientes a la lengua española, en este caso, por ejemplo, letras con tildación como la "á". 
+                json.dump(diccionario_tareas, arch_tareas, indent=4, ensure_ascii=False)
+                # NOTA: Convierto nuevamente los datos a un formato legible por el módulo date.
+                for id, elemento in diccionario_tareas.items():
+                    if isinstance(elemento, dict) and "fecha_límite" in elemento:
+                        elemento["fecha_límite"] = datetime.strptime(elemento['fecha_límite'], "%d-%m-%Y").date()
+                print("Info: Se ha generado el archivo tareas.json con datos aleatorios.")
+        except OSError as error:
+            print(f"ERROR: No se ha podido generar el archivo tareas.json por un error del sistema operativo: {error}")
+        except PermissionError as error:
+            print(f"ERROR: No se ha podido generar el archivo tareas.json por falta de permisos del programa: {error}")
+        except:
+            print("ERROR: No se ha podido generar el archivo tareas.json")
+    except OSError as error:
+        print(f"No se ha podido abrir el archivo tareas.json por un error del sistema operativo: {error}")
+    except PermissionError as error:
+        print(f"ERROR: No se ha podido abrir el archivo tareas.json por falta de permisos del programa: {error}")
+    except:
+        print("ERROR: No se ha podido abrir el archivo tareas.json")
+    return diccionario_tareas
 
-def actualizar_asignacion():
-    id_asignacion = int(input("Ingresa el ID de la asignacion a actualizar: "))
-    num_tareas = int(input("Cuantas tareas quieres asignar? "))
-    ids_tareas = random.sample([tarea[0] for tarea in matriz_tareas[1:]], num_tareas)
-    asignaciones.actualizar_asignacion(matriz_asignaciones, id_asignacion, ids_tareas)
+dict_personas = leer_archivo_personas()
+dict_tareas = leer_archivo_tareas()
 
-def eliminar_asignacion():
-    id_asignacion = int(input("Ingresa el ID de la asignacion a eliminar: "))
-    asignaciones.eliminar_asignacion(matriz_asignaciones, id_asignacion)
-
-def volver_o_salir():
-    while True:
-        print("\n--- Opciones ---")
-        print("1. Volver al menú principal")
-        print("2. Salir del programa")
-        
-        opcion = input("Elige una opción: ")
-
-        if opcion == '1':
-            return
-        elif opcion == '2':
-            print("Saliendo del programa...")
-            exit()
-        else:
-            print("Opción no válida, por favor elige nuevamente.")
-
-
-menu()
+print(dict_personas)
+print()
+print(dict_tareas)

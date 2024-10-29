@@ -1,0 +1,83 @@
+{
+    "0": "personas",
+    "1": {
+        "nombre_completo": [
+            "laura",
+            "lópez"
+        ],
+        "usuario": "llópez",
+        "email": "laura.lópez@gmail.com",
+        "telefono": "011-2134-7433",
+        "contrasenia": "n0f(LE;_"
+    },
+    "2": {
+        "nombre_completo": [
+            "sofía",
+            "gómez"
+        ],
+        "usuario": "sgómez",
+        "email": "sofía.gómez@outlook.com",
+        "telefono": "011-3847-6904",
+        "contrasenia": "xo:mBh{\\"
+    },
+    "3": {
+        "nombre_completo": [
+            "pedro",
+            "lópez"
+        ],
+        "usuario": "plópez",
+        "email": "pedro.lópez@hotmail.com",
+        "telefono": "011-9707-3642",
+        "contrasenia": "n3im#z?k"
+    },
+    "4": {
+        "nombre_completo": [
+            "ana",
+            "fernández"
+        ],
+        "usuario": "afernández",
+        "email": "ana.fernández@gmail.com",
+        "telefono": "011-2729-7681",
+        "contrasenia": "*2MBQ:f:"
+    },
+    "5": {
+        "nombre_completo": [
+            "pedro",
+            "sánchez"
+        ],
+        "usuario": "psánchez",
+        "email": "pedro.sánchez@gmail.com",
+        "telefono": "011-3802-9898",
+        "contrasenia": "{]1jXOvw"
+    },
+    "6": {
+        "nombre_completo": [
+            "ana",
+            "ramírez"
+        ],
+        "usuario": "aramírez",
+        "email": "ana.ramírez@yahoo.com",
+        "telefono": "011-4625-8371",
+        "contrasenia": "[co57\"OS"
+    },
+    "7": {
+        "nombre_completo": [
+            "pedro",
+            "rodríguez"
+        ],
+        "usuario": "prodríguez",
+        "email": "pedro.rodríguez@gmail.com",
+        "telefono": "011-9148-3946",
+        "contrasenia": "=Nl_QVfT"
+    },
+    "8": {
+        "nombre_completo": [
+            "carlos",
+            "martínez"
+        ],
+        "usuario": "cmartínez",
+        "email": "carlos.martínez@outlook.com",
+        "telefono": "011-5137-6844",
+        "contrasenia": "aX3XvY~f"
+    }
+}
