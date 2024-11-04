@@ -84,3 +84,5 @@ asignaciones.eliminar_asignacion(matriz_asignaciones, 73)
 for linea in matriz_asignaciones:
     print(linea)
 print()
+
+print(matriz_asignaciones[1][2])

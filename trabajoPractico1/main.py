@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 
+# Lectura de datos
 def leer_archivo_personas():
     """
     Lee el archivo personas.json y devuelve un diccionario con los datos registrados. En caso de no ser encontrado, se lo genera con datos aleatorios.
@@ -19,6 +20,7 @@ def leer_archivo_personas():
         with open("personas.json", "r", encoding="UTF-8") as arch_personas:
             # Se leen los datos de personas.json y se los guarda en un diccionario
             diccionario_personas = json.load(arch_personas)
+            diccionario_personas = {int(key): value for key, value in diccionario_personas.items()} # Convierto las keys (IDs) en enteros nuevamente para evitar conflictos.
             print("Info: Se ha leído correctamente los datos del archivo personas.json")
     except FileNotFoundError:
         # Se generan los datos de forma alteatoria para el archivo personas.json y se los escribe en el mismo. 
@@ -64,6 +66,7 @@ def leer_archivo_tareas():
         with open("tareas.json", "r", encoding="UTF-8") as arch_tareas:
             # Se leen los datos de tareas.json y se los guarda en un diccionario
             diccionario_tareas = json.load(arch_tareas)
+            diccionario_tareas = {int(key): value for key, value in diccionario_tareas.items()}
             # NOTA: Se convierten las fechas en un formato legible por el módulo date.
             for id, elemento in diccionario_tareas.items():
                 if isinstance(elemento, dict) and "fecha_límite" in elemento:
@@ -100,7 +103,6 @@ def leer_archivo_tareas():
     except Exception as error:
         print(f"ERROR: No se ha podido abrir el archivo tareas.json: {error}")
     return diccionario_tareas
-
 def leer_archivo_asignaciones():
     """
     Lee el archivo asignaciones.txt y devuelve una matriz con los datos registrados. En caso de no ser encontrado, lo genera con datos aleatorios utilizando los diccionarios de personas y tareas.
@@ -160,6 +162,66 @@ def leer_archivo_asignaciones():
     except Exception as error:
         print(f"ERROR: No se ha podido abrir el archivo asignaciones.txt: {error}")
 
+# Muestreo de datos
+def imprimir_asignaciones(matriz_asignaciones: list, diccionario_tareas: dict, diccionario_personas: dict):
+    """Imprime la tabla con las asignaciones que hay en memoria
+
+    Args:
+        matriz_asignaciones (list): Matriz de las asignaciones
+        diccionario_tareas (dict): Diccionario de las tareas
+        diccionario_personas (dict): Diccionario de las personas
+    """    
+    if diccionario_personas[0] != "personas":
+        print("¡ATENCIÓN!: El elemento pasado como diccionario_personas no es un diccionario de personas.")
+    elif diccionario_tareas[0] != "tareas":
+        print("¡ATENCIÓN!: El elemento pasado como diccionario_tareas no es un diccionario de tareas.")
+    elif matriz_asignaciones[0] != "asignaciones":
+        print("¡ATENCIÓN!: El elemento pasado como matriz_asignaciones no es una matriz de asignaciones.")
+    else:
+        contador_asignacion = 0
+        for asignacion in matriz_asignaciones:
+            #Formatos de la tabla
+            ancho_id_tarea = 7
+            ancho_descripcion_tarea = 50
+            ancho_nombre_completo = 30
+            ancho_estado = 10
+            ancho_total = 106
+            
+            if asignacion == "asignaciones":
+                print("-" * ancho_total)
+                print(asignacion.upper().center(ancho_total))
+                print("-" * ancho_total)
+                print(f"{'tarea'.capitalize().center(ancho_id_tarea)} | {'descripcion'.capitalize().center(ancho_descripcion_tarea)} | {'asignados'.capitalize().center(ancho_nombre_completo)} | {'estado'.capitalize().center(ancho_estado)}")
+                print("-" * ancho_total)
+                contador_asignacion +=1
+                continue
+            
+            #Datos de la tabla
+            id_tarea = matriz_asignaciones[contador_asignacion][1]
+            descripcion_tarea = diccionario_tareas[id_tarea]["descripcion"]
+            if diccionario_tareas[id_tarea]["estado"] == 0:
+                estado = "retrasada" 
+            elif diccionario_tareas[id_tarea]["estado"] == 1:
+                estado = "pendiente"
+            elif diccionario_tareas[id_tarea]["estado"] == 2:
+                estado = "en proceso"
+            else:
+                estado = "finalizada"
+            estado = estado.center(ancho_estado)
+            
+            contador_persona = 0
+            for i in range(1, len(matriz_asignaciones[contador_asignacion][2])+1):
+                if contador_persona == 0:
+                    nombre_completo = f"{diccionario_personas[matriz_asignaciones[contador_asignacion][2][0]]['nombre_completo'][0]} {diccionario_personas[matriz_asignaciones[contador_asignacion][2][0]]['nombre_completo'][1]}".center(ancho_nombre_completo)
+                    print(f"{str(id_tarea).center(ancho_id_tarea)} | {str(descripcion_tarea).capitalize().center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {str(estado).capitalize().center(ancho_estado)}")
+                    contador_persona += 1
+                else:
+                    nombre_completo = f"{diccionario_personas[matriz_asignaciones[contador_asignacion][2][contador_persona]]['nombre_completo'][0]} {diccionario_personas[matriz_asignaciones[contador_asignacion][2][contador_persona]]['nombre_completo'][1]}".center(ancho_nombre_completo)
+                    print(f"{' '.center(ancho_id_tarea)} | {' '.center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {' '.center(ancho_estado)}")
+                    contador_persona += 1
+            contador_asignacion +=1
+            print("-" * ancho_total)
+
 os.system("cls") # NOTA: Esta función permite limpiar la consola al momento de iniciarse el programa.
 print("Iniciando programa...")
 print("----------------------------------------------------------------------")
@@ -168,3 +230,7 @@ diccionario_personas = leer_archivo_personas()
 diccionario_tareas = leer_archivo_tareas()
 matriz_asignaciones = leer_archivo_asignaciones()
 print("----------------------------------------------------------------------")
+print("Programa iniciado con éxito.")
+print()
+
+imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
