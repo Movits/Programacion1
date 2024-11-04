@@ -181,22 +181,25 @@ def imprimir_asignaciones(matriz_asignaciones: list, diccionario_tareas: dict, d
         contador_asignacion = 0
         for asignacion in matriz_asignaciones:
             #Formatos de la tabla
+            ancho_id_asignacion = 14
             ancho_id_tarea = 7
             ancho_descripcion_tarea = 50
-            ancho_nombre_completo = 30
+            ancho_nombre_completo = 25
             ancho_estado = 10
-            ancho_total = 106
+            ancho_total = 137
+            ancho_fecha_limite = 16
             
             if asignacion == "asignaciones":
                 print("-" * ancho_total)
                 print(asignacion.upper().center(ancho_total))
                 print("-" * ancho_total)
-                print(f"{'tarea'.capitalize().center(ancho_id_tarea)} | {'descripcion'.capitalize().center(ancho_descripcion_tarea)} | {'asignados'.capitalize().center(ancho_nombre_completo)} | {'estado'.capitalize().center(ancho_estado)}")
+                print(f"{'asignación'.capitalize().center(ancho_id_asignacion)} | {'tarea'.capitalize().center(ancho_id_tarea)} | {'descripcion'.capitalize().center(ancho_descripcion_tarea)} | {'asignados'.capitalize().center(ancho_nombre_completo)} | {'estado'.capitalize().center(ancho_estado)} | {'fecha límite'.capitalize().center(ancho_fecha_limite)}")
                 print("-" * ancho_total)
                 contador_asignacion +=1
                 continue
             
             #Datos de la tabla
+            id_asignacion = matriz_asignaciones[contador_asignacion][0]
             id_tarea = matriz_asignaciones[contador_asignacion][1]
             descripcion_tarea = diccionario_tareas[id_tarea]["descripcion"]
             if diccionario_tareas[id_tarea]["estado"] == 0:
@@ -208,18 +211,76 @@ def imprimir_asignaciones(matriz_asignaciones: list, diccionario_tareas: dict, d
             else:
                 estado = "finalizada"
             estado = estado.center(ancho_estado)
+            fecha_limite = diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d-%m-%Y")
             
             contador_persona = 0
             for i in range(1, len(matriz_asignaciones[contador_asignacion][2])+1):
                 if contador_persona == 0:
                     nombre_completo = f"{diccionario_personas[matriz_asignaciones[contador_asignacion][2][0]]['nombre_completo'][0]} {diccionario_personas[matriz_asignaciones[contador_asignacion][2][0]]['nombre_completo'][1]}".center(ancho_nombre_completo)
-                    print(f"{str(id_tarea).center(ancho_id_tarea)} | {str(descripcion_tarea).capitalize().center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {str(estado).capitalize().center(ancho_estado)}")
+                    print(f"{str(id_asignacion).center(ancho_id_asignacion)} | {str(id_tarea).center(ancho_id_tarea)} | {str(descripcion_tarea).capitalize().center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {str(estado).capitalize().center(ancho_estado)} | {str(fecha_limite).center(ancho_fecha_limite)}")
                     contador_persona += 1
                 else:
                     nombre_completo = f"{diccionario_personas[matriz_asignaciones[contador_asignacion][2][contador_persona]]['nombre_completo'][0]} {diccionario_personas[matriz_asignaciones[contador_asignacion][2][contador_persona]]['nombre_completo'][1]}".center(ancho_nombre_completo)
-                    print(f"{' '.center(ancho_id_tarea)} | {' '.center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {' '.center(ancho_estado)}")
+                    print(f"{' '.center(ancho_id_asignacion)} | {' '.center(ancho_id_tarea)} | {' '.center(ancho_descripcion_tarea)} | {str(nombre_completo).title().center(ancho_nombre_completo)} | {' '.center(ancho_estado)} | {' '.center(ancho_fecha_limite)}")
                     contador_persona += 1
             contador_asignacion +=1
+            print("-" * ancho_total)
+def imprimir_tareas(diccionario_tareas: dict):
+    
+    # Formato de la tabla
+    ancho_id_tarea = 7
+    ancho_descripcion_tarea = 50
+    ancho_estado = 12
+    ancho_fecha_limite = 16
+    ancho_total = 92
+    
+    for id_tarea in diccionario_tareas.keys():
+        if id_tarea == 0:
+            print("-" * ancho_total)
+            print(f"{str(diccionario_tareas[id_tarea]).upper().center(ancho_total)}")
+            print("-" * ancho_total)
+            print(f"{'tarea'.capitalize().center(ancho_id_tarea)} | {'descripción'.capitalize().center(ancho_descripcion_tarea)} | {'estado'.capitalize().center(ancho_estado)} | {'fecha límite'.capitalize().center(ancho_fecha_limite)}")
+            print("-" * ancho_total)
+        else:
+            descripcion_tarea = str(diccionario_tareas[id_tarea]["descripcion"])
+            if diccionario_tareas[id_tarea]["estado"] == 0:
+                estado = "retrasada" 
+            elif diccionario_tareas[id_tarea]["estado"] == 1:
+                estado = "pendiente"
+            elif diccionario_tareas[id_tarea]["estado"] == 2:
+                estado = "en proceso"
+            else:
+                estado = "finalizada"
+            fecha_limite = diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d-%m-%Y")
+            
+            print(f"{str(id_tarea).center(ancho_id_tarea)} | {descripcion_tarea.capitalize().center(ancho_descripcion_tarea)} | {estado.capitalize().center(ancho_estado)} | {str(fecha_limite).center(ancho_fecha_limite)}")
+            print("-" * ancho_total)
+def imprimir_personas(diccionario_personas: dict):
+    
+    # Formato de la tabla
+    ancho_id_persona = 11
+    ancho_nombre_completo = 25
+    ancho_usuario = 15
+    ancho_email = 30
+    ancho_telefono = 17
+    ancho_contrasenia = 25
+    ancho_total = 138
+    
+    for id_persona in diccionario_personas.keys():        
+        if id_persona == 0:
+            print("-" * ancho_total)
+            print(str(diccionario_personas[id_persona]).upper().center(ancho_total))
+            print("-" * ancho_total)
+            print(f"{'persona'.capitalize().center(ancho_id_persona)} | {'nombre completo'.capitalize().center(ancho_nombre_completo)} | {'usuario'.capitalize().center(ancho_usuario)} | {'email'.capitalize().center(ancho_email)} | {'teléfono'.capitalize().center(ancho_telefono)} | {'contraseña'.capitalize().center(ancho_contrasenia)}")
+            print("-" * ancho_total)
+        else:
+            # Datos de la tabla
+            nombre_completo = f"{diccionario_personas[id_persona]['nombre_completo'][0]} {diccionario_personas[id_persona]['nombre_completo'][1]}"
+            usuario = diccionario_personas[id_persona]["usuario"]
+            email = diccionario_personas[id_persona]["email"]
+            telefono = diccionario_personas[id_persona]["telefono"]
+            contrasenia = diccionario_personas[id_persona]["contrasenia"]   
+            print(f"{str(id_persona).center(ancho_id_persona)} | {nombre_completo.capitalize().center(ancho_nombre_completo)} | {str(usuario).center(ancho_usuario)} | {str(email).center(ancho_email)} | {str(telefono).center(ancho_telefono)} | {str(contrasenia).center(ancho_contrasenia)}")
             print("-" * ancho_total)
 
 os.system("cls") # NOTA: Esta función permite limpiar la consola al momento de iniciarse el programa.
@@ -232,5 +293,3 @@ matriz_asignaciones = leer_archivo_asignaciones()
 print("----------------------------------------------------------------------")
 print("Programa iniciado con éxito.")
 print()
-
-imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
