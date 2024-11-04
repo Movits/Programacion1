@@ -73,6 +73,12 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
                 print("¡ATENCIÓN!: El ID de persona otorgado no existe en el diccionario de personas.")
 
 def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int):
+    """Elimina una asignación en base al ID de una tarea
+
+    Args:
+        matriz_asignaciones (list): Matriz de asignaciones a la cual se le quiere eliminar una asignación
+        id_tarea (int): ID de la tarea que se quiere eliminar
+    """    
     # En caso de que el ID de la tarea esté presente dentro de la matriz de asignaciones, la elimina, de ser confirmado por el usuario. De lo contrario, notifica al usuario de la inconveniencia.
     id_taraes_existente = False
     for i in range(1, len(matriz_asignaciones)):

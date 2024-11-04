@@ -102,6 +102,12 @@ def leer_archivo_tareas():
     return diccionario_tareas
 
 def leer_archivo_asignaciones():
+    """
+    Lee el archivo asignaciones.txt y devuelve una matriz con los datos registrados. En caso de no ser encontrado, lo genera con datos aleatorios utilizando los diccionarios de personas y tareas.
+
+    Returns:
+        list: Matriz de asignaciones
+    """
     matriz_asignaciones = []
     # Se intenta la lectura del archivo asignaciones.txt. 
     # De no existir el archivo, se generan los datos automáticamente. 

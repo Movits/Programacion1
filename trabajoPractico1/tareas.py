@@ -21,6 +21,15 @@ def validar_diccionario_tareas(diccionario: dict):
     return diccionario_valido
 
 def validar_fecha(fecha: datetime.date):
+    """
+    Verifica si una fecha es válida, comprobando que no sea anterior a la fecha actual. Si es inválida, solicita una nueva fecha al usuario.
+
+    Args:
+        fecha (datetime.date): Fecha a validar
+
+    Returns:
+        tuple: Un booleano que indica la validez de la fecha y la fecha corregida si es necesario
+    """
     fecha_valida = True
     if not isinstance(fecha, datetime.date):
         fecha_valida = False
@@ -38,6 +47,12 @@ contextos = ["en la oficina","para el cliente","con el equipo","en línea","para
 generar_tarea = lambda: f"{random.choice(acciones)} {random.choice(objetos)} {random.choice(contextos)}"
 
 def generar_fecha():
+    """
+    Genera una fecha aleatoria entre 15 días antes y 60 días después de la fecha actual.
+
+    Returns:
+        datetime.date: Fecha generada aleatoriamente
+    """
     #En base a la fecha de ejecución, genero una fecha entre 15 días antes y 60 días después
     hoy = datetime.date.today()
     fecha_minima = hoy - datetime.timedelta(days = 15)
@@ -46,6 +61,15 @@ def generar_fecha():
     return fecha
 
 def generar_diccionario_tareas(cantidad):
+    """
+    Crea un diccionario de tareas con una cantidad especificada, asignando descripciones, fechas límite y estados de manera aleatoria.
+
+    Args:
+        cantidad (int): Número de tareas a generar
+
+    Returns:
+        dict: Diccionario que representa las tareas generadas
+    """
     diccionario_tareas = {0: "tareas"}
     for i in range(1, cantidad + 1):
         estado = random.choice([0,1,2,3])
@@ -57,6 +81,14 @@ def generar_diccionario_tareas(cantidad):
     return diccionario_tareas
 
 def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
+    """
+    Crea una nueva tarea en el diccionario si la fecha es válida, y le asigna un estado inicial.
+
+    Args:
+        diccionario (dict): Diccionario de tareas
+        tarea (str): Descripción de la tarea
+        fecha (datetime.date): Fecha límite de la tarea
+    """
     fecha_valida, fecha_corregida = validar_fecha(fecha)
     if validar_diccionario_tareas(diccionario) and fecha_valida:
         estado = 1
@@ -67,6 +99,16 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
         }
 
 def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado: int):
+    """
+    Actualiza la descripción, fecha límite y estado de una tarea en el diccionario si el ID existe.
+
+    Args:
+        diccionario (dict): Diccionario de tareas
+        id (str): ID de la tarea a actualizar
+        tarea (str): Nueva descripción de la tarea
+        fecha (str): Nueva fecha límite en formato "DD/MM/AAAA"
+        estado (int): Nuevo estado de la tarea
+    """
     if id not in diccionario:
         print("ATENCIÓN: El ID otorgado no se encuentra en el diccionario.")
     else:
@@ -78,11 +120,29 @@ def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado:
             diccionario[id]["estado"] = estado
 
 def eliminar_tarea(diccionario: dict, id: str):
+    """
+    Elimina una tarea del diccionario en base a su ID si el ID es válido.
+
+    Args:
+        diccionario (dict): Diccionario de tareas
+        id (str): ID de la tarea a eliminar
+    """
     id_valido, posicion = funciones_propias.validar_id(diccionario, id)
     if validar_diccionario_tareas(diccionario) and id_valido:
         diccionario.pop(posicion)
 
 def buscar_tareas_por_fecha(diccionario, fecha_inicio, fecha_fin):
+    """
+    Busca tareas en un rango de fechas especificado y devuelve las que caen dentro del rango.
+
+    Args:
+        diccionario (dict): Diccionario de tareas
+        fecha_inicio (str): Fecha de inicio del rango en formato "DD/MM/AAAA"
+        fecha_fin (str): Fecha de fin del rango en formato "DD/MM/AAAA"
+
+    Returns:
+        list: Lista de tareas que están dentro del rango de fechas especificado
+    """
     if not validar_diccionario_tareas(diccionario):
         print("El diccionario de tareas no es válido")
         return []
