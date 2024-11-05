@@ -91,7 +91,7 @@ def generar_diccionario_personas(cantidad: int):
 
     return diccionario_personas
 
-def crear_persona(diccionario: dict, nombre: str, apellido: str):
+def crear_persona(diccionario: dict, nombre: str, apellido: str, usuario: str, email: str, telefono: str, contrasenia: str):
     """ La función `crear_persona` añade un nuevo elemento al diccionario solicitado con los datos del nombre y apellido otorgados.
 
     Args:
@@ -99,25 +99,18 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str):
         nombre (str): Nombre de la persona
         apellido (str): Apellido de la persona
     """    
-    #Verifico si los nombres ingresados son válidos.
-    nombre_, apellido_ = validar_nombre_completo(nombre, apellido)
-    
     #Cargo los datos, de ser válida, en el diccionario.
     if validar_diccionario_personas(diccionario):
-        usuario = generar_usuario(nombre_, apellido_, diccionario)
-        email = generar_email(nombre_, apellido_)
-        telefono = generar_telefono()
-        contrasenia = generar_contrasenia()
-        
         diccionario[len(diccionario)] = {
-            "nombre_completo": (nombre_, apellido_),
+            "nombre_completo": (nombre, apellido),
             "usuario": usuario,
             "email": email,
             "telefono": telefono,
             "contrasenia": contrasenia
         }
+        print("Info: Se ha creado una nueva persona con éxito.")
 
-def actualizar_persona(diccionario: dict,id: int, nombre: str,apellido: str):
+def actualizar_persona(diccionario: dict,id_persona: int, nombre: str,apellido: str, usuario: str, email: str, telefono: str, contrasenia: str):
     """ Actualiza el nombre y apellido de la persona con el ID dado en el diccionario.
 
     Args:
@@ -126,19 +119,16 @@ def actualizar_persona(diccionario: dict,id: int, nombre: str,apellido: str):
         nombre (str): Nombre de la persona
         apellido (str): Apellido de la persona
     """    
-    nombre_, apellido_ = validar_nombre_completo(nombre, apellido)
-    
     if validar_diccionario_personas(diccionario):
-        if id not in diccionario:
-            print(f"Error: El ID '{id}' no se encuentra en el diccionario.")
-            return  # Return early to avoid updating a non-existent entry
-        
-        usuario = generar_usuario(nombre_, apellido_, diccionario)
-        email = generar_email(nombre_, apellido_)
-        
-        diccionario[id]["nombre_completo"] = (nombre_, apellido_)
-        diccionario[id]["usuario"] = usuario
-        diccionario[id]["email"] = email
+        if id_persona not in diccionario:
+            print(f"Error: El ID '{id_persona}' no se encuentra en el diccionario.")
+        else:
+            diccionario[id_persona]["nombre_completo"] = (nombre, apellido)
+            diccionario[id_persona]["usuario"] = usuario
+            diccionario[id_persona]["email"] = email
+            diccionario[id_persona]["telefono"] = telefono
+            diccionario[id_persona]["contrasenia"] = contrasenia
+            print("Info: Persona actualizada correctamente")
 
 def eliminar_persona(diccionario: dict,id: int):
     """Elimina la persona con el ID dado del diccionario.
@@ -150,8 +140,14 @@ def eliminar_persona(diccionario: dict,id: int):
     #Verifico el diccionario y el ID
     if validar_diccionario_personas(diccionario):
         if id in diccionario.keys():
-            #Elimino el elemnto con el ID correspondiente
-            diccionario.pop(id)
+            confirmacion = input(f"Para confirmar la eliminación del la persona cuyo ID es {id}, escriba 'Eliminar': ")
+            if confirmacion == "Eliminar" or confirmacion == "eliminar":
+                diccionario.pop(id)
+                print()
+                print(f"Info: Se ha eliminado la persona {id}")
+            else:
+                print()
+                print("Info: No se ha eliminado ninguna persona")
         else: 
             print(f"Error: El ID '{id}' no se encuentra en el diccionario.")
             
@@ -179,40 +175,8 @@ def generar_usuario(nombre: str, apellido: str, diccionario: dict):
         usuario = f"{usuario_base}{cont}" 
         cont += 1
     return usuario
-
-
-def actualizar_usuario(diccionario: dict, id: int, nuevo_usuario: str):
-    """
-    Actualiza el nombre de usuario de una persona en el diccionario, siempre que el nuevo nombre no exista ya.
-
-    Args:
-        diccionario (dict): Diccionario de personas
-        id (int): ID de la persona en el diccionario
-        nuevo_usuario (str): Nuevo nombre de usuario a asignar
-    """
-    usuarios_existentes = set()
-    for persona in diccionario.values():
-        if isinstance(persona, dict) and "usuario" in persona:
-            usuarios_existentes.add(persona["usuario"])
-    
-    if nuevo_usuario in usuarios_existentes:
-        raise ValueError(f"El nombre de usuario '{nuevo_usuario}' ya existe.")
     
     diccionario[id]["usuario"] = nuevo_usuario
-    
-        
-def eliminar_usuario(diccionario: dict, id: int):
-    """
-    Elimina la información del usuario (usuario, contraseña, email y teléfono) asociada al ID dado en el diccionario.
-
-    Args:
-        diccionario (dict): Diccionario de personas
-        id (int): ID de la persona a la cual se le eliminarán los datos
-    """
-    diccionario[id].pop("usuario")
-    diccionario[id].pop("contrasenia")
-    diccionario[id].pop("email")
-    diccionario[id].pop("telefono")
     
     
 def generar_contrasenia():
@@ -226,21 +190,15 @@ def generar_contrasenia():
     contrasenia = "".join(random.choices(caracteres, k=8)) #8 caracteres
     return contrasenia
 
-def actualizar_contrasenia(diccionario: dict, id: int, contrasenia: str):
-    """
-    Actualiza la contraseña de una persona en el diccionario si cumple con los requisitos de longitud y caracteres especiales.
-
-    Args:
-        diccionario (dict): Diccionario de personas
-        id (int): ID de la persona en el diccionario
-        contrasenia (str): Nueva contraseña a asignar
-    """
+def validar_contrasenia(contrasenia: str):
     posee_caracter_especial = re.search(r"[!@#$%^&*]" ,contrasenia)
     posee_numero = re.search(r"\d", contrasenia)
-    if posee_caracter_especial and posee_numero and len(contrasenia) >= 8:
-        diccionario[id]["contrasenia"] = contrasenia
-    else:
-        print("ATENCIÓN: La contraseña otorgada es inválida. Debe poseer 8 carácteres, conteniendo uno especial y un número.")
+    while not posee_caracter_especial and not posee_numero and not len(contrasenia) >= 8:
+        print("¡ATENCIÓN!: La contraseña debe poseer al menos un carácter especial, un número y poseer 8 carácteres como mínimo.")
+        contrasenia = input("Ingrese una nueva contraseña válida: ")
+        posee_caracter_especial = re.search(r"[!@#$%^&*]" ,contrasenia)
+        posee_numero = re.search(r"\d", contrasenia)
+    return contrasenia
 
 def generar_email(nombre: str, apellido: str):
     """
@@ -254,22 +212,25 @@ def generar_email(nombre: str, apellido: str):
         str: Dirección de correo electrónico generada
     """
     dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"]
-    email = f"{nombre.lower()}.{apellido.lower()}@{random.choice(dominios)}"
+    email = f"{nombre.lower()}{apellido.lower()}@{random.choice(dominios)}"
     return email
 
-def actualizar_email(diccionario: dict, id: int, email: str):
-    """
-    Actualiza la dirección de correo electrónico de una persona en el diccionario si el formato es válido.
-
-    Args:
-        diccionario (dict): Diccionario de personas
-        id (int): ID de la persona en el diccionario
-        email (str): Nueva dirección de correo electrónico a asignar
-    """
-    if re.match(r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}", email):
-        diccionario[id]["email"] = email
-    else:
-        print("ATENCIÓN: El email otorgado es inválido. Debe de tener el formato direccion@dominio.com.")
+def validar_email(diccionario: dict, email: str):
+    for id_persona in diccionario.keys():
+        if id_persona == 0:
+            continue
+        else:
+            if diccionario[id_persona]["email"] == email:
+                email_preexistente = True
+                while email_preexistente:
+                    print("Info: El email ingresado ya está vincuado a otro usuario.")
+                    email = input("Ingrese otro email: ")
+                    if diccionario[id_persona]["email"] != email:
+                        email_preexistente = False
+    while not re.match(r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}", email):
+        print("Info: Email con formato inválido. Por favor, verifique su entrada.")
+        email = input("Reingrese el email correctamente: ")
+    return email
 
 def generar_telefono():
     """
@@ -281,14 +242,19 @@ def generar_telefono():
     telefono = f"011-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
     return telefono
 
-def actualizar_telefono(diccionario: dict, id: int, telefono: str):
-    """
-    Actualiza el número de teléfono de una persona en el diccionario si cumple con el formato especificado.
-
-    Args:
-        diccionario (dict): Diccionario de personas
-        id (int): ID de la persona en el diccionario
-        telefono (str): Nuevo número de teléfono a asignar
-    """
-    if re.match(r"\d{3}-\d{4}-\d{4}", telefono):
-        diccionario[id]["telefono"] = telefono
+def validar_telefono(diccionario: dict, telefono: str):
+    for id_persona in diccionario.keys():
+        if id_persona == 0:
+            continue
+        else:
+            if telefono == diccionario[id_persona]["telefono"]:
+                telefono_preexistente = True
+                while telefono_preexistente:
+                    print("Info: El número de teléfono ingresado ya está asociado a otro usuario.")
+                    telefono = input("Por favor, ingrese otro número de teléfono: ")
+                    if telefono != diccionario[id_persona]["telefono"]:
+                        telefono_preexistente = False
+    while not re.match(r"\d{3}-\d{4}-\d{4}", telefono):
+        print("Info: Teléfono ingresado con formato inválido. Por favor, verifique su entrada. (###-####-####)")
+        telefono = input("Reingrese el teléfono correctamente: ")
+    return telefono

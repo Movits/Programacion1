@@ -118,3 +118,6 @@ for key, valor in diccionario.items():
     else:
         print(f"ID: {key}, Tipo: {valor}")
 print()
+
+print("VALIDAR EMAIL")
+personas.validar_telefono(diccionario, input("Ingrese un telefono: "))

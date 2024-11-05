@@ -1,23 +1,23 @@
 {
     "0": "tareas",
     "1": {
-        "descripcion": "investigar el proyecto para el cliente",
-        "fecha_límite": "09-12-2024",
-        "estado": 2
+        "descripcion": "documentar el plan para el cliente",
+        "fecha_límite": "09-11-2024",
+        "estado": 3
     },
     "2": {
-        "descripcion": "validar el plan en la oficina",
-        "fecha_límite": "21-11-2024",
-        "estado": 2
+        "descripcion": "documentar el documento durante el viaje",
+        "fecha_límite": "02-01-2025",
+        "estado": 0
     },
     "3": {
-        "descripcion": "revisar la propuesta en el servidor",
-        "fecha_límite": "10-12-2024",
+        "descripcion": "completar el gráfico en la oficina",
+        "fecha_límite": "20-12-2024",
         "estado": 2
     },
     "4": {
-        "descripcion": "organizar el plan con el equipo",
-        "fecha_límite": "09-12-2024",
+        "descripcion": "organizar la base de datos en la reunión",
+        "fecha_límite": "13-11-2024",
         "estado": 3
     }
 }

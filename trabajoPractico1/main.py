@@ -421,8 +421,76 @@ while True:
         print("2. Actualizar persona")
         print("3. Eliminar persona")
         print("4. Volver")
-        # TODO: CONTINUAR AQUI
+        opcion = input()
         
+        if opcion == str(1):
+            # Se solicitan todos los datos de la nueva persona.
+            nombre, apellido = personas.validar_nombre_completo(input("* Ingrese el primer nombre de su nueva persona: "), input("* Ingrese el apellido de su nueva persona: "))
+            usuario = personas.generar_usuario(nombre, apellido, diccionario_personas)
+            print(f"Info: Se ha generado su nombre de usuario: {usuario}")
+            email = personas.validar_email(diccionario_personas, input("* Ingrese el email de su nueva persona: "))
+            telefono = personas.validar_telefono(diccionario_personas, input("* Ingrese el número de teléfono de su nueva persona: "))
+            contrasenia = personas.validar_contrasenia(input("* Ingrese una contrasenia para su nuevo usuario:"))
+            personas.crear_persona(diccionario_personas, nombre, apellido, usuario, email, telefono, contrasenia)
+        
+        elif opcion == str(2):
+            print()
+            print("Actualizar persona")
+            print("1. Actualizar nombre completo")
+            print("2. Actualizar nombre de usuario")
+            print("3. Actualizar email")
+            print("4. Actualizar número de teléfono")
+            print("5. Actualizar contraseña")
+            print("6. Volver")
+            opcion = input()
+            
+            if opcion == str(1):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona cuyo nombre completo quiera actualizar: "))
+                nombre, apellido = personas.validar_nombre_completo(input("Ingrese el nuevo nombre de la persona: "), input("Ingrese el nuevo apellido de la persona: "))
+                personas.actualizar_persona(diccionario_personas, id_persona, nombre, apellido, diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+            
+            elif opcion == str(2):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona cuyo nombre de usuario quiera actualizar: "))
+                usuario = input("Ingrese el nuevo nombre de usuario de la persona: ")
+                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], usuario, diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+            
+            elif opcion == str(3):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona cuyo email quiera actualizar: "))
+                email = personas.validar_email(diccionario_personas, input("Ingrese el nuevo email de la persona: "))
+                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], email, diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+                
+            elif opcion == str(4):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona cuyo número de teléfono quiera actualizar: "))
+                telefono = personas.validar_telefono(diccionario_personas, input("Ingrese el nuevo número de teléfono de la persona: "))
+                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], telefono, diccionario_personas[id_persona]["contrasenia"])
+            
+            elif opcion == str(5):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona cuya contraseña quiera actualizar: "))
+                contrasenia = personas.validar_contrasenia(input("Ingrese la nueva contraseña de la persona: "))
+                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], contrasenia)
+            else:
+                print()
+                print("Volviendo al menú principal...")
+
+        elif opcion == str(3):
+                imprimir_personas(diccionario_personas)
+                id_persona = int(input("Ingrese el ID de la persona que desee eliminar: "))
+                personas.eliminar_persona(diccionario_personas, id_persona)
+                # Elimino todas las vinculaciones que tenga la persona en las asignaciones
+                for asignacion in matriz_asignaciones[1:]:
+                    personas_asignadas = asignacion[2]
+                    if id_persona in personas_asignadas:
+                        personas_asignadas.remove(id_persona)
+        
+        else:
+            print()
+            print("Volviendo al menú principal...")
+                    
     elif opcion == str(4):
         break
 
