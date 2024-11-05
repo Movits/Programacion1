@@ -226,7 +226,11 @@ def imprimir_asignaciones(matriz_asignaciones: list, diccionario_tareas: dict, d
             contador_asignacion +=1
             print("-" * ancho_total)
 def imprimir_tareas(diccionario_tareas: dict):
-    
+    """Imprime la tabla de tareas que hay en la memoria
+
+    Args:
+        diccionario_tareas (dict): Diccionario de tareas
+    """    
     # Formato de la tabla
     ancho_id_tarea = 7
     ancho_descripcion_tarea = 50
@@ -256,7 +260,11 @@ def imprimir_tareas(diccionario_tareas: dict):
             print(f"{str(id_tarea).center(ancho_id_tarea)} | {descripcion_tarea.capitalize().center(ancho_descripcion_tarea)} | {estado.capitalize().center(ancho_estado)} | {str(fecha_limite).center(ancho_fecha_limite)}")
             print("-" * ancho_total)
 def imprimir_personas(diccionario_personas: dict):
-    
+    """Imprime el diccionario de personas que hay en memoria
+
+    Args:
+        diccionario_personas (dict): diccionario de personas
+    """    
     # Formato de la tabla
     ancho_id_persona = 11
     ancho_nombre_completo = 25
@@ -282,6 +290,77 @@ def imprimir_personas(diccionario_personas: dict):
             contrasenia = diccionario_personas[id_persona]["contrasenia"]   
             print(f"{str(id_persona).center(ancho_id_persona)} | {nombre_completo.capitalize().center(ancho_nombre_completo)} | {str(usuario).center(ancho_usuario)} | {str(email).center(ancho_email)} | {str(telefono).center(ancho_telefono)} | {str(contrasenia).center(ancho_contrasenia)}")
             print("-" * ancho_total)
+
+# Escritura de datos en los archivos
+def escribir_archivo_personas(diccionario_personas: dict):
+    """Escribqe en el archivo personas.json los datos de personas guardados en memoria
+
+    Args:
+        diccionario_personas (dict): Diccionario de personas
+    """    
+    if diccionario_personas[0] == "personas":
+        try:
+            with open("personas.json", "w", encoding="UTF-8") as arch_personas:
+                json.dump(diccionario_personas, arch_personas, indent=4, ensure_ascii=False)
+                print("Info: Se ha escrito la información de personas procesada en el archivo personas.json")
+        except OSError as error:
+            print(f"ERROR: No se ha podido escribir el archivo personas.json por un error del sistema operativo: {error}")
+        except PermissionError as error:
+            print(f"ERROR: No se ha podido escribir el archivo personas.json por falta de permisos del programa: {error}")
+        except Exception as error:
+            print(f"ERROR: No se ha podido escribir el archivo personas.json: {error}")
+    else:
+        print("¡ATENCIÓN!: Se ha intentado escribir otro tipo de dato en el archivo personas.json pero se ha evitado")
+        print("Info: No se ha escrito ningún dato en personas.json")
+def escribir_archivo_tareas(diccionario_tareas: dict):
+    """Escribe en el archivo tareas.josn los datos de las tareas que hay en memoria
+
+    Args:
+        diccionario_tareas (dict): Diccionario de tareas
+    """    
+    # Verifico que el diccionario sea efectivamente de tareas.
+    if diccionario_tareas[0] == "tareas":
+        # Convierto los datos de fecha a un formato legible por un archivo JSON (DD/MM/AAAA)
+        for id, elemento in diccionario_tareas.items():
+            if isinstance(elemento, dict) and "fecha_límite" in elemento:
+                elemento["fecha_límite"] = elemento["fecha_límite"].strftime("%d-%m-%Y")
+        # Paso a escribir directamente los datos luego de ser adaptados..
+        try:
+            with open("tareas.json", "w", encoding="UTF-8") as arch_tareas:
+                json.dump(diccionario_tareas, arch_tareas, indent=4, ensure_ascii=False)
+                print("Info: Se ha escrito la información de tareas procesada en el archivo tareas.json")
+        except OSError as error:
+            print(f"ERROR: No se ha podido escribir el archivo tareas.json por un error del sistema operativo: {error}")
+        except PermissionError as error:
+            print(f"ERROR: No se ha podido escribir el archivo tareas.json por falta de permisos del programa: {error}")
+        except Exception as error:
+            print(f"ERROR: No se ha podido escribir el archivo tareas.json: {error}")
+    else:
+        print("¡ATENCIÓN!: Se ha intentado escribir otro tipo de dato en el archivo tareas.json pero se ha evitado")
+        print("Info: No se ha escrito ningún dato en tareas.json")
+def escribir_archivo_asignaciones(matriz_asignaciones: list):
+    """Escribe en el archivo asignaciones.txt los datos de las asignaciones que hay en memoria
+
+    Args:
+        matriz_asignaciones (list): Matriz de asignaciones
+    """    
+    try:
+        with open("asignaciones.txt", "w", encoding="UTF-8") as arch_asignaciones:
+            for linea in matriz_asignaciones:
+                if linea == "asignaciones":
+                    arch_asignaciones.write(f"{linea}\n")
+                    continue
+                id_asignacion = linea[0]
+                id_tarea = linea[1]
+                personas_asignadas = "|".join(map(str, linea[2]))
+                arch_asignaciones.write(f"{id_asignacion},{id_tarea},{personas_asignadas}\n")
+            print("Info: Se ha escrito la información de asignaciones procesada en el archivo asignaciones.txt")
+    except OSError as error:
+        print(f"ERROR: No se ha podido escribir el archivo asignaciones.txt por un error del sistema operativo: {error}")
+    except PermissionError as error:
+        print(f"ERROR: No se ha podido escribir el archivo asignaciones.txt por falta de permisos del programa: {error}")
+    except Exception as error:
+        print(f"ERROR: No se ha podido escribir el archivo asignaciones.txt: {error}")
 
 os.system("cls") # NOTA: Esta función permite limpiar la consola al momento de iniciarse el programa.
 print("Iniciando programa...")
@@ -495,6 +574,12 @@ while True:
         break
 
 os.system("cls")
-print("-----------------------------------")
+
+print("-------------------------------------------------------------------------------------------")
+escribir_archivo_personas(diccionario_personas)
+escribir_archivo_tareas(diccionario_tareas)
+escribir_archivo_asignaciones(matriz_asignaciones)
+print("-------------------------------------------------------------------------------------------")
+
+print()
 print("Fin del programa. ¡Gracias por ver!")
-print("-----------------------------------")
