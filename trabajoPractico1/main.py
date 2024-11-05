@@ -362,6 +362,41 @@ def escribir_archivo_asignaciones(matriz_asignaciones: list):
     except Exception as error:
         print(f"ERROR: No se ha podido escribir el archivo asignaciones.txt: {error}")
 
+# Lectura de datos en consola
+# NOTA: Su propósito es evitar que el programa colapse si el usuario proporciona un dato con formato inválido o de tipo incorrecto cuando sea solicitado.
+def solicitar_entero(mensaje_en_consola: str):
+    """Permite solicitar una entrada y que sólo sea aceptada cuando esta sea un número entero.
+
+    Args:
+        mensaje_en_consola (str): Mensaje que se desee mostrar en consola al esperar la entrada
+
+    Returns:
+        entrada (str): El valor que se aceptará
+    """    
+    while True:
+        try:
+            entrada = int(input(mensaje_en_consola))
+            return entrada
+        except ValueError:
+            print()
+            print("¡ATENCIÓN!: Entrada inválida. Por favor, ingrese un número entero.")
+def solicitar_fecha(mensaje_en_consola: str):
+    """Permite solicitar una entrada y que sólo sea aceptada cuando esta sea una fecha con formato válido.
+
+    Args:
+        mensaje_en_consola (str): Mensaje que se desee mostrar en consola al esperar la entrada
+
+    Returns:
+        entrada (str): El valor que se aceptará
+    """   
+    while True:
+        try:
+            entrada = datetime.datetime.strptime(input(mensaje_en_consola), "%d/%m/%Y").date()
+            return entrada
+        except ValueError:
+            print()
+            print("¡ATENCIÓN!: Fecha inválida. Por favor, ingrese una fecha con formato (DD/MM/AAAA)")
+
 os.system("cls") # NOTA: Esta función permite limpiar la consola al momento de iniciarse el programa.
 print("Iniciando programa...")
 print("----------------------------------------------------------------------")
@@ -372,8 +407,12 @@ matriz_asignaciones = leer_archivo_asignaciones()
 print("----------------------------------------------------------------------")
 print("Programa iniciado con éxito.")
 
+mensaeje_de_situacion = "Bienvenido"
+
 # Menú de navegación
 while True:
+    os.system("cls")
+    print(mensaeje_de_situacion)
     print()
     print("Menú principal")
     print("1. Ver asignaciones")
@@ -384,6 +423,7 @@ while True:
     opcion = input()
     
     if opcion == str(1):
+        os.system("cls")
         imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
         print()
         print("Ver asignaciones")
@@ -394,40 +434,45 @@ while True:
         opcion = input()
         
         if opcion == str(1):
+            os.system("cls")
             imprimir_tareas(diccionario_tareas)
-            id_tarea = int(input("Ingrese el ID de la tarea a asignar: "))
+            id_tarea = solicitar_entero("Ingrese el ID de la tarea a asignar: ")
             personas_asignadas = []
             while True:
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                persona = int(input("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): "))
+                persona = solicitar_entero("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): ")
                 if not persona == -1:
                     personas_asignadas.append(persona)
                 else:
                     break
-            asignaciones.crear_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+            mensaeje_de_situacion = asignaciones.crear_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
 
         elif opcion == str(2):
+            os.system("cls")
             imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
-            id_tarea = int(input("Ingrese el ID de la tarea cuya asignación que desee actualizar: "))
+            id_tarea = solicitar_entero("Ingrese el ID de la tarea cuya asignación que desee actualizar: ")
             personas_asignadas = []
             while True:
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                persona = int(input("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): "))
+                persona = solicitar_entero("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): ")
                 if not persona == -1:
                     personas_asignadas.append(persona)
                 else:
                     break
-            asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+            mensaeje_de_situacion = asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
 
         elif opcion == str(3):
+            os.system("cls")
             imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
-            id_tarea = int(input("Ingrese el ID tarea cuya asignación desee eliminar: "))
-            asignaciones.eliminar_asignacion(matriz_asignaciones, id_tarea)
+            id_tarea = solicitar_entero("Ingrese el ID tarea cuya asignación desee eliminar: ")
+            mensaeje_de_situacion = asignaciones.eliminar_asignacion(matriz_asignaciones, id_tarea)
         else:
-            print()
-            print("Volviendo al menú principal...")
+            mensaeje_de_situacion = "Volviendo al menú principal..."
 
     elif opcion == str(2):
+        os.system("cls")
         imprimir_tareas(diccionario_tareas)
         print()
         print("Ver tareas")
@@ -438,14 +483,17 @@ while True:
         opcion = input()
         
         if opcion == str(1):
+            os.system("cls")
+            print("Crear tarea")
             print()
             descripcion_tarea = input("Ingrese la descripción de su nueva tarea: ")
-            fecha_limite = datetime.datetime.strptime(input("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): "), "%d/%m/%Y").date()
-            tareas.crear_tarea(diccionario_tareas, descripcion_tarea, fecha_limite)
+            fecha_limite = solicitar_fecha("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): ")
+            mensaeje_de_situacion = tareas.crear_tarea(diccionario_tareas, descripcion_tarea, fecha_limite)
 
         elif opcion == str(2):
-            print()
+            os.system("cls")
             print("Actualizar tarea")
+            print()
             print("1. Actualizar descripción de la tarea")
             print("2. Actualizar estado de la tarea")
             print("3. Actualizar fecha límite de entrega de la tarea")
@@ -453,48 +501,50 @@ while True:
             opcion = input()
 
             if opcion == str(1):
+                os.system("cls")
+                imprimir_tareas(diccionario_tareas)
                 print()
                 print("Actualizar descripción de la tarea")
-                imprimir_tareas(diccionario_tareas)
-                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar"))
+                id_tarea = solicitar_entero("Ingrese el ID de la tarea cuya descripción desee actualizar: ")
                 descripcion = input("Ingrese la descripción de la tarea: ")
-                tareas.actualizar_tarea(diccionario_tareas, id_tarea, descripcion, diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
+                mensaeje_de_situacion = tareas.actualizar_tarea(diccionario_tareas, id_tarea, descripcion, diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
 
             elif opcion == str(2):
+                os.system("cls")
+                imprimir_tareas(diccionario_tareas)
                 print()
                 print("Actualizar estado de la tarea")
-                imprimir_tareas(diccionario_tareas)
-                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar: "))
-                estado = int(input("Ingrese el estado a asignarle a la tarea seleccionadada (1: Pendiente, 2: En proceso, 3: Finalizada): "))
+                id_tarea = solicitar_entero("Ingrese el ID de la tarea cuya descripción desee actualizar: ")
+                estado = solicitar_entero("Ingrese el estado a asignarle a la tarea seleccionadada (1: Pendiente, 2: En proceso, 3: Finalizada): ")
                 while estado < 1 or estado > 3:
                     print("¡ATENCIÓN!: El estado que has ingresado es inválido. Por favor, ingresa un estado valido")
-                    estado = int(input("1: Pendiente, 2: En proceso, 3: Finalizada: "))
-                tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), estado)
+                    estado = solicitar_entero("1: Pendiente, 2: En proceso, 3: Finalizada: ")
+                mensaeje_de_situacion = tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), estado)
 
             elif opcion == str(3):
+                os.system("cls")
+                imprimir_tareas(diccionario_tareas)
                 print()
                 print("Actualizar fecha límite de entrega de la tarea")
-                imprimir_tareas(diccionario_tareas)
-                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar: "))
-                fecha_limite = datetime.datetime.strptime(input("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): "), "%d/%m/%Y").date()
-                tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], fecha_limite.strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
+                id_tarea = solicitar_entero("Ingrese el ID de la tarea cuya descripción desee actualizar: ")
+                fecha_limite = solicitar_fecha("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): ")
+                mensaeje_de_situacion = tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], fecha_limite.strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
             else:
-                print()
-                print("Volviendo al menú principal...")
+                mensaeje_de_situacion = "Volviendo al menú principal..."
         elif opcion == str(3):
-            print()
+            os.system("cls")
             print("Eliminar tarea")
             imprimir_tareas(diccionario_tareas)
-            id_tarea = int(input("Ingrese el ID de la tarea que desee eliminar: "))
-            tareas.eliminar_tarea(diccionario_tareas, id_tarea)
+            id_tarea = solicitar_entero("Ingrese el ID de la tarea que desee eliminar: ")
+            mensaeje_de_situacion = tareas.eliminar_tarea(diccionario_tareas, id_tarea)
             asignaciones.eliminar_asignacion(matriz_asignaciones, id_tarea, "Eliminar")
         else:
-            print()
-            print("Volviendo al menú principal...")
+            mensaeje_de_situacion = "Volviendo al menú principal..."
 
     elif opcion == str(3):
-        print()
+        os.system("cls")
         imprimir_personas(diccionario_personas)
+        print()
         print("Ver personas")
         print("1. Crear persona")
         print("2. Actualizar persona")
@@ -503,16 +553,21 @@ while True:
         opcion = input()
         
         if opcion == str(1):
+            os.system("cls")
+            print("Crear persona")
+            print()
             # Se solicitan todos los datos de la nueva persona.
             nombre, apellido = personas.validar_nombre_completo(input("* Ingrese el primer nombre de su nueva persona: "), input("* Ingrese el apellido de su nueva persona: "))
             usuario = personas.generar_usuario(nombre, apellido, diccionario_personas)
             print(f"Info: Se ha generado su nombre de usuario: {usuario}")
             email = personas.validar_email(diccionario_personas, input("* Ingrese el email de su nueva persona: "))
             telefono = personas.validar_telefono(diccionario_personas, input("* Ingrese el número de teléfono de su nueva persona: "))
-            contrasenia = personas.validar_contrasenia(input("* Ingrese una contrasenia para su nuevo usuario:"))
-            personas.crear_persona(diccionario_personas, nombre, apellido, usuario, email, telefono, contrasenia)
+            contrasenia = personas.validar_contrasenia(input("* Ingrese una contrasenia para su nuevo usuario: "))
+            mensaeje_de_situacion = personas.crear_persona(diccionario_personas, nombre, apellido, usuario, email, telefono, contrasenia)
         
         elif opcion == str(2):
+            os.system("cls")
+            imprimir_personas(diccionario_personas)
             print()
             print("Actualizar persona")
             print("1. Actualizar nombre completo")
@@ -524,51 +579,65 @@ while True:
             opcion = input()
             
             if opcion == str(1):
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona cuyo nombre completo quiera actualizar: "))
+                print()
+                print("Actualizar nombre completo")
+                id_persona = solicitar_entero("Ingrese el ID de la persona cuyo nombre completo quiera actualizar: ")
                 nombre, apellido = personas.validar_nombre_completo(input("Ingrese el nuevo nombre de la persona: "), input("Ingrese el nuevo apellido de la persona: "))
-                personas.actualizar_persona(diccionario_personas, id_persona, nombre, apellido, diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+                mensaeje_de_situacion = personas.actualizar_persona(diccionario_personas, id_persona, nombre, apellido, diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
             
             elif opcion == str(2):
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona cuyo nombre de usuario quiera actualizar: "))
+                print()
+                print("Actualizar nombre de usuario")
+                id_persona = solicitar_entero("Ingrese el ID de la persona cuyo nombre de usuario quiera actualizar: ")
                 usuario = input("Ingrese el nuevo nombre de usuario de la persona: ")
-                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], usuario, diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+                mensaeje_de_situacion = personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], usuario, diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
             
             elif opcion == str(3):
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona cuyo email quiera actualizar: "))
+                print()
+                print("Actualizar email")
+                id_persona = solicitar_entero("Ingrese el ID de la persona cuyo email quiera actualizar: ")
                 email = personas.validar_email(diccionario_personas, input("Ingrese el nuevo email de la persona: "))
-                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], email, diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
+                mensaeje_de_situacion = personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], email, diccionario_personas[id_persona]["telefono"], diccionario_personas[id_persona]["contrasenia"])
                 
             elif opcion == str(4):
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona cuyo número de teléfono quiera actualizar: "))
+                print()
+                print("Actualizar número de teléfono")
+                id_persona = solicitar_entero("Ingrese el ID de la persona cuyo número de teléfono quiera actualizar: ")
                 telefono = personas.validar_telefono(diccionario_personas, input("Ingrese el nuevo número de teléfono de la persona: "))
-                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], telefono, diccionario_personas[id_persona]["contrasenia"])
+                mensaeje_de_situacion = personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], telefono, diccionario_personas[id_persona]["contrasenia"])
             
             elif opcion == str(5):
+                os.system("cls")
                 imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona cuya contraseña quiera actualizar: "))
-                contrasenia = personas.validar_contrasenia(input("Ingrese la nueva contraseña de la persona: "))
-                personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], contrasenia)
-            else:
                 print()
-                print("Volviendo al menú principal...")
+                print("Actualizar contraseña")
+                id_persona = solicitar_entero("Ingrese el ID de la persona cuya contraseña quiera actualizar: ")
+                contrasenia = personas.validar_contrasenia(input("Ingrese la nueva contraseña de la persona: "))
+                mensaeje_de_situacion = personas.actualizar_persona(diccionario_personas, id_persona, diccionario_personas[id_persona]["nombre_completo"][0], diccionario_personas[id_persona]["nombre_completo"][1], diccionario_personas[id_persona]["usuario"], diccionario_personas[id_persona]["email"], diccionario_personas[id_persona]["telefono"], contrasenia)
+            else:
+                mensaeje_de_situacion = "Volviendo al menú principal..."
 
         elif opcion == str(3):
-                imprimir_personas(diccionario_personas)
-                id_persona = int(input("Ingrese el ID de la persona que desee eliminar: "))
-                personas.eliminar_persona(diccionario_personas, id_persona)
-                # Elimino todas las vinculaciones que tenga la persona en las asignaciones
-                for asignacion in matriz_asignaciones[1:]:
-                    personas_asignadas = asignacion[2]
-                    if id_persona in personas_asignadas:
-                        personas_asignadas.remove(id_persona)
+            os.system("cls")
+            imprimir_personas(diccionario_personas)
+            id_persona = solicitar_entero("Ingrese el ID de la persona que desee eliminar: ")
+            personas.eliminar_persona(diccionario_personas, id_persona)
+            # Elimino todas las vinculaciones que tenga la persona en las asignaciones
+            for asignacion in matriz_asignaciones[1:]:
+                personas_asignadas = asignacion[2]
+                if id_persona in personas_asignadas:
+                    personas_asignadas.remove(id_persona)
         
         else:
-            print()
-            print("Volviendo al menú principal...")
+            mensaeje_de_situacion = "Volviendo al menú principal..."
                     
     elif opcion == str(4):
         break

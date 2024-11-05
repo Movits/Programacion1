@@ -88,6 +88,8 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
         diccionario (dict): Diccionario de tareas
         tarea (str): Descripción de la tarea
         fecha (datetime.date): Fecha límite de la tarea
+    Returns:
+    mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
     fecha_valida, fecha_corregida = validar_fecha(fecha)
     if validar_diccionario_tareas(diccionario) and fecha_valida:
@@ -97,8 +99,8 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
             "fecha_límite": fecha_corregida,
             "estado": estado
         }
-        print()
-        print("Info: Se ha creado una nueva tarea (Por defecto siempre se le asigna el estado de Pendiente al ser creada).")
+        mensaeje_de_situacion = "Info: Se ha creado una nueva tarea (Por defecto siempre se le asigna el estado de Pendiente al ser creada)."
+        return mensaeje_de_situacion
 
 def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado: int):
     """
@@ -110,9 +112,11 @@ def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado:
         tarea (str): Nueva descripción de la tarea
         fecha (str): Nueva fecha límite en formato "DD/MM/AAAA"
         estado (int): Nuevo estado de la tarea
+    Returns:
+        mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
     if id not in diccionario:
-        print("ATENCIÓN: El ID otorgado no se encuentra en el diccionario.")
+        mensaeje_de_situacion = "ATENCIÓN: El ID otorgado no se encuentra en el diccionario."
     else:
         fecha = datetime.datetime.strptime(fecha, "%d/%m/%Y").date()
         fecha_valida, fecha = validar_fecha(fecha)
@@ -120,8 +124,8 @@ def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado:
             diccionario[id]["descripcion"] = tarea
             diccionario[id]["fecha_límite"] = fecha
             diccionario[id]["estado"] = estado
-            print()
-            print("Info: Se ha actualizado la tarea seleccionada.")
+            mensaeje_de_situacion = "Info: Se ha actualizado la tarea seleccionada."
+            return mensaeje_de_situacion
 
 def eliminar_tarea(diccionario: dict, id: str):
     """
@@ -130,17 +134,18 @@ def eliminar_tarea(diccionario: dict, id: str):
     Args:
         diccionario (dict): Diccionario de tareas
         id (str): ID de la tarea a eliminar
+    Returns:
+        mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
     id_valido, posicion = funciones_propias.validar_id(diccionario, id)
     if validar_diccionario_tareas(diccionario) and id_valido:
         confirmacion = input(f"Para confirmar la eliminación del la tarea cuyo ID es {id}, escriba 'Eliminar': ")
         if confirmacion == "Eliminar" or confirmacion == "eliminar":
             diccionario.pop(posicion)
-            print()
-            print(f"Info: Se ha eliminado la tarea {id}")
+            mensaeje_de_situacion = f"Info: Se ha eliminado la tarea {id}"
+            return mensaeje_de_situacion
         else:
-            print()
-            print("Info: No se ha eliminado ninguna tarea")
+            mensaeje_de_situacion = "Info: No se ha eliminado ninguna tarea"
 
 def buscar_tareas_por_fecha(diccionario, fecha_inicio, fecha_fin):
     """

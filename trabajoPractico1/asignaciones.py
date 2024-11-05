@@ -32,15 +32,20 @@ def crear_asignacion(matriz_asignaciones: list, personas_asignables: list, tarea
         tareas_asignables (list): Lista de todos los IDs de las tareas seleccionables para asignar.
         id_tarea (int): ID de la tarea a la cual se le quiere asignar las personas.
         personas_seleccionadas (list): Lista de las personas que serán asignadas a la tarea.
+        
+    Returns:
+        mensaje_de_situacion (str): Mensaje que indica la situacion del proceso
     """    
     # Se verifica que tanto el ID de la tarea como los IDs de las personas existan dentro de los diccionarios correspondientes.
     if id_tarea in tareas_asignables and all(id_persona in personas_asignables for id_persona in personas_seleccionadas):
         # Generando una lista con todos los IDs de tareas presentes en la matriz, verifica que el ID de tarea otorgado no este dentro de la nueva lista.
         if id_tarea not in [fila[1] for fila in matriz_asignaciones[1:]]:
-            print("Info: Tarea asignada")
+            mensaje_de_situacion = "Info: Tarea asignada"
             matriz_asignaciones.append([len(matriz_asignaciones),id_tarea, personas_seleccionadas])
+            return mensaje_de_situacion
         else:
-            print("¡ATENCIÓN!: la tarea que intentas asignar ya está asignada a otro grupo de personas. Para editarla, debes usar la funcion 'actualizar_asignacion()'")
+            mensaje_de_situacion ="¡ATENCIÓN!: la tarea que intentas asignar ya está asignada a otro grupo de personas. Para editarla, debes usar la funcion 'actualizar_asignacion()'"
+            return
     else:
         if not(id_tarea in tareas_asignables):
             print("¡ATENCIÓN!: El ID otorgado no está registrado en el sistema.")
@@ -56,6 +61,8 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
         tareas_asignables (list): Lista de todos los IDs de las tareas seleccionables para asignar.
         id_tarea (int): ID de la tarea a la cual se le quiere asignar las personas
         personas_seleccionadas (list): Lista de las personas que serán asignadas a la tarea
+    Returns:
+        mensaeje_de_situacion (str): Mensaje que informa el resultado del proceso
     """
         # Si la tarea y las personas estan presentes en sus respectivos diccionarios, se verifica que la tarea este tambien presente en la matriz de asignaciones, y se la actualiza con los datos otorgados. De caso contrario se notifica al usuario de cual es el impedimento y no se modifica ningun dato.
         if id_tarea in tareas_asignables and all(id_persona in personas_asignables for id_persona in personas_seleccionadas):
@@ -64,10 +71,11 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
                     if matriz_asignaciones[i][1] == id_tarea:
                         matriz_asignaciones[i] = [i, id_tarea, personas_seleccionadas]
                         break
-                print()
-                print("Info: Se ha actualizado la asignación correctamente.")
+                mensaeje_de_situacion = "Info: Se ha actualizado la asignación correctamente."
+                return mensaeje_de_situacion
             else:
-                print("¡ATENCIÓN!: El ID de tarea otorgado no esta presente en el diccionario de asignaciones. Para crear una asignacion debes usar la funcion 'crear_asignacion()'.")
+                mensaeje_de_situacion = "¡ATENCIÓN!: El ID de tarea otorgado no esta presente en el diccionario de asignaciones. Para crear una asignacion debes usar la opcion 'Crear asignacion'."
+                return mensaeje_de_situacion
         else:
             if id_tarea not in tareas_asignables:
                 print("¡ATENCIÓN!: El ID de tarea otorgado no existe en el el diccionario de tareas.")
@@ -81,6 +89,8 @@ def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion="
         matriz_asignaciones (list): Matriz de asignaciones a la cual se le quiere eliminar una asignación
         id_tarea (int): ID de la tarea que se quiere eliminar
         confirmacion (str): Si se coloca "Eliminar" se salta la verificacion
+    Returns:
+        mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """    
     # En caso de que el ID de la tarea esté presente dentro de la matriz de asignaciones, la elimina, de ser confirmado por el usuario. De lo contrario, notifica al usuario de la inconveniencia.
     id_taraes_existente = False
@@ -94,11 +104,10 @@ def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion="
                 break
             if confirmacion == "Eliminar" or confirmacion == "eliminar":
                 del matriz_asignaciones[i]
-                print()
-                print(f"Info: Se ha eliminado la asignación de la tarea {id_tarea}.")
-                break
+                mensaeje_de_situacion = f"Info: Se ha eliminado la asignación de la tarea {id_tarea}."
+                return mensaeje_de_situacion
             else:
-                print()
-                print("Info: No se ha eliminado ningún dato.")
+                mensaeje_de_situacion = "Info: No se ha eliminado ningún dato."
+                return mensaeje_de_situacion
     if not id_taraes_existente:
         print("¡ATENCIÓN!: El ID de tarea otorgado no existe en la matriz asignaciones.")

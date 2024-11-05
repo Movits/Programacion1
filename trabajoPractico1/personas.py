@@ -31,7 +31,7 @@ def validar_nombre_completo(nombre: str,apellido: str):
         Exception: En caso de que algún parámetro no sea de tipo str, lanza una excepción programada indicando el error.
 
     Returns:
-        tuple: Tupla que contiene el nombre y el apellido validados.
+        nombre_completo (tuple): Tupla que contiene el nombre y el apellido validados.
     """    
     try:
         nombre_ = nombre
@@ -98,6 +98,8 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str, usuario: str, e
         diccionario (dict): Diccionario de personas objetivo
         nombre (str): Nombre de la persona
         apellido (str): Apellido de la persona
+    Returns:
+        mensaeje_de_situacion (str): Mensaje del resultado del proceso
     """    
     #Cargo los datos, de ser válida, en el diccionario.
     if validar_diccionario_personas(diccionario):
@@ -108,7 +110,8 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str, usuario: str, e
             "telefono": telefono,
             "contrasenia": contrasenia
         }
-        print("Info: Se ha creado una nueva persona con éxito.")
+        mensaeje_de_situacion = "Info: Se ha creado una nueva persona con éxito."
+        return mensaeje_de_situacion
 
 def actualizar_persona(diccionario: dict,id_persona: int, nombre: str,apellido: str, usuario: str, email: str, telefono: str, contrasenia: str):
     """ Actualiza el nombre y apellido de la persona con el ID dado en el diccionario.
@@ -118,17 +121,21 @@ def actualizar_persona(diccionario: dict,id_persona: int, nombre: str,apellido: 
         id (int): ID de la persona objetivo
         nombre (str): Nombre de la persona
         apellido (str): Apellido de la persona
+    Returns:
+        mensaeje_de_situacion (str): Mensaje del resultado del proceso
     """    
     if validar_diccionario_personas(diccionario):
         if id_persona not in diccionario:
-            print(f"Error: El ID '{id_persona}' no se encuentra en el diccionario.")
+            mensaeje_de_situacion = f"Error: El ID '{id_persona}' no se encuentra en el diccionario."
+            return mensaeje_de_situacion
         else:
             diccionario[id_persona]["nombre_completo"] = (nombre, apellido)
             diccionario[id_persona]["usuario"] = usuario
             diccionario[id_persona]["email"] = email
             diccionario[id_persona]["telefono"] = telefono
             diccionario[id_persona]["contrasenia"] = contrasenia
-            print("Info: Persona actualizada correctamente")
+            mensaeje_de_situacion = "Info: Persona actualizada correctamente"
+            return mensaeje_de_situacion
 
 def eliminar_persona(diccionario: dict,id: int):
     """Elimina la persona con el ID dado del diccionario.
@@ -136,6 +143,8 @@ def eliminar_persona(diccionario: dict,id: int):
     Args:
         diccionario (dict): Diccionario objetivo
         id (int): ID de la persona a eliminar
+    Return:
+        mensaeje_de_situacion (str): Mensaje del resultado del proceso
     """    
     #Verifico el diccionario y el ID
     if validar_diccionario_personas(diccionario):
@@ -143,14 +152,14 @@ def eliminar_persona(diccionario: dict,id: int):
             confirmacion = input(f"Para confirmar la eliminación del la persona cuyo ID es {id}, escriba 'Eliminar': ")
             if confirmacion == "Eliminar" or confirmacion == "eliminar":
                 diccionario.pop(id)
-                print()
-                print(f"Info: Se ha eliminado la persona {id}")
+                mensaeje_de_situacion = f"Info: Se ha eliminado la persona {id}"
+                return mensaeje_de_situacion
             else:
-                print()
-                print("Info: No se ha eliminado ninguna persona")
+                mensaeje_de_situacion = "Info: No se ha eliminado ninguna persona"
+                return mensaeje_de_situacion
         else: 
-            print(f"Error: El ID '{id}' no se encuentra en el diccionario.")
-            
+            mensaeje_de_situacion = f"Error: El ID '{id}' no se encuentra en el diccionario."
+            return mensaeje_de_situacion
 
 def generar_usuario(nombre: str, apellido: str, diccionario: dict):
     """
