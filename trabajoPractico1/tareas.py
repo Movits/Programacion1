@@ -97,6 +97,8 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
             "fecha_límite": fecha_corregida,
             "estado": estado
         }
+        print()
+        print("Info: Se ha creado una nueva tarea (Por defecto siempre se le asigna el estado de Pendiente al ser creada).")
 
 def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado: int):
     """
@@ -118,6 +120,8 @@ def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado:
             diccionario[id]["descripcion"] = tarea
             diccionario[id]["fecha_límite"] = fecha
             diccionario[id]["estado"] = estado
+            print()
+            print("Info: Se ha actualizado la tarea seleccionada.")
 
 def eliminar_tarea(diccionario: dict, id: str):
     """
@@ -129,7 +133,14 @@ def eliminar_tarea(diccionario: dict, id: str):
     """
     id_valido, posicion = funciones_propias.validar_id(diccionario, id)
     if validar_diccionario_tareas(diccionario) and id_valido:
-        diccionario.pop(posicion)
+        confirmacion = input(f"Para confirmar la eliminación del la tarea cuyo ID es {id}, escriba 'Eliminar': ")
+        if confirmacion == "Eliminar" or confirmacion == "eliminar":
+            diccionario.pop(posicion)
+            print()
+            print(f"Info: Se ha eliminado la tarea {id}")
+        else:
+            print()
+            print("Info: No se ha eliminado ninguna tarea")
 
 def buscar_tareas_por_fecha(diccionario, fecha_inicio, fecha_fin):
     """

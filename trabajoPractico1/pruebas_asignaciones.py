@@ -43,7 +43,7 @@ for linea in matriz_asignaciones:
 print()
 
 print("ACTUALIZACIÓN DE UNA ASIGNACIÓN SATISFACTORIA")
-print("Nota: Se actualiza la asignacion")
+print("Nota: Se actualiza la asignacion de la tarea con ID 2 a los usuarios 3 y 4.")
 asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), 2, [3,4])
 for linea in matriz_asignaciones:
     print(linea)

@@ -292,4 +292,141 @@ diccionario_tareas = leer_archivo_tareas()
 matriz_asignaciones = leer_archivo_asignaciones()
 print("----------------------------------------------------------------------")
 print("Programa iniciado con éxito.")
-print()
+
+# Menú de navegación
+while True:
+    print()
+    print("Menú principal")
+    print("1. Ver asignaciones")
+    print("2. Ver tareas")
+    print("3. Ver personas")
+    print("4. Finalizar programa")
+    print()
+    opcion = input()
+    
+    if opcion == str(1):
+        imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
+        print()
+        print("Ver asignaciones")
+        print("1. Crear asignación")
+        print("2. Actualizar asignación")
+        print("3. Eliminar asignación")
+        print("4. Volver")
+        opcion = input()
+        
+        if opcion == str(1):
+            imprimir_tareas(diccionario_tareas)
+            id_tarea = int(input("Ingrese el ID de la tarea a asignar: "))
+            personas_asignadas = []
+            while True:
+                imprimir_personas(diccionario_personas)
+                persona = int(input("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): "))
+                if not persona == -1:
+                    personas_asignadas.append(persona)
+                else:
+                    break
+            asignaciones.crear_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+
+        elif opcion == str(2):
+            imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
+            id_tarea = int(input("Ingrese el ID de la tarea cuya asignación que desee actualizar: "))
+            personas_asignadas = []
+            while True:
+                imprimir_personas(diccionario_personas)
+                persona = int(input("Ingrese el ID de la siguiente persona a asignar (-1 para terminar): "))
+                if not persona == -1:
+                    personas_asignadas.append(persona)
+                else:
+                    break
+            asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+
+        elif opcion == str(3):
+            imprimir_asignaciones(matriz_asignaciones, diccionario_tareas, diccionario_personas)
+            id_tarea = int(input("Ingrese el ID tarea cuya asignación desee eliminar: "))
+            asignaciones.eliminar_asignacion(matriz_asignaciones, id_tarea)
+        else:
+            print()
+            print("Volviendo al menú principal...")
+
+    elif opcion == str(2):
+        imprimir_tareas(diccionario_tareas)
+        print()
+        print("Ver tareas")
+        print("1. Crear tarea")
+        print("2. Actualizar tarea")
+        print("3. Eliminar Tarea")
+        print("4. Volver")
+        opcion = input()
+        
+        if opcion == str(1):
+            print()
+            descripcion_tarea = input("Ingrese la descripción de su nueva tarea: ")
+            fecha_limite = datetime.datetime.strptime(input("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): "), "%d/%m/%Y").date()
+            tareas.crear_tarea(diccionario_tareas, descripcion_tarea, fecha_limite)
+
+        elif opcion == str(2):
+            print()
+            print("Actualizar tarea")
+            print("1. Actualizar descripción de la tarea")
+            print("2. Actualizar estado de la tarea")
+            print("3. Actualizar fecha límite de entrega de la tarea")
+            print("4. Volver")
+            opcion = input()
+
+            if opcion == str(1):
+                print()
+                print("Actualizar descripción de la tarea")
+                imprimir_tareas(diccionario_tareas)
+                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar"))
+                descripcion = input("Ingrese la descripción de la tarea: ")
+                tareas.actualizar_tarea(diccionario_tareas, id_tarea, descripcion, diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
+
+            elif opcion == str(2):
+                print()
+                print("Actualizar estado de la tarea")
+                imprimir_tareas(diccionario_tareas)
+                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar: "))
+                estado = int(input("Ingrese el estado a asignarle a la tarea seleccionadada (1: Pendiente, 2: En proceso, 3: Finalizada): "))
+                while estado < 1 or estado > 3:
+                    print("¡ATENCIÓN!: El estado que has ingresado es inválido. Por favor, ingresa un estado valido")
+                    estado = int(input("1: Pendiente, 2: En proceso, 3: Finalizada: "))
+                tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], diccionario_tareas[id_tarea]["fecha_límite"].strftime("%d/%m/%Y"), estado)
+
+            elif opcion == str(3):
+                print()
+                print("Actualizar fecha límite de entrega de la tarea")
+                imprimir_tareas(diccionario_tareas)
+                id_tarea = int(input("Ingrese el ID de la tarea cuya descripción desee actualizar: "))
+                fecha_limite = datetime.datetime.strptime(input("Ingrese la fecha límite de entrega para su nueva tarea (DD/MM/AAAA): "), "%d/%m/%Y").date()
+                tareas.actualizar_tarea(diccionario_tareas, id_tarea, diccionario_tareas[id_tarea]["descripcion"], fecha_limite.strftime("%d/%m/%Y"), diccionario_tareas[id_tarea]["estado"])
+            else:
+                print()
+                print("Volviendo al menú principal...")
+        elif opcion == str(3):
+            print()
+            print("Eliminar tarea")
+            imprimir_tareas(diccionario_tareas)
+            id_tarea = int(input("Ingrese el ID de la tarea que desee eliminar: "))
+            tareas.eliminar_tarea(diccionario_tareas, id_tarea)
+            asignaciones.eliminar_asignacion(matriz_asignaciones, id_tarea, "Eliminar")
+        else:
+            print()
+            print("Volviendo al menú principal...")
+
+    elif opcion == str(3):
+        print()
+        imprimir_personas(diccionario_personas)
+        print("Ver personas")
+        print("1. Crear persona")
+        print("2. Actualizar persona")
+        print("3. Eliminar persona")
+        print("4. Volver")
+        # TODO: CONTINUAR AQUI
+        
+    elif opcion == str(4):
+        break
+
+os.system("cls")
+print("-----------------------------------")
+print("Fin del programa. ¡Gracias por ver!")
+print("-----------------------------------")

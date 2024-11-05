@@ -64,6 +64,8 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
                     if matriz_asignaciones[i][1] == id_tarea:
                         matriz_asignaciones[i] = [i, id_tarea, personas_seleccionadas]
                         break
+                print()
+                print("Info: Se ha actualizado la asignación correctamente.")
             else:
                 print("¡ATENCIÓN!: El ID de tarea otorgado no esta presente en el diccionario de asignaciones. Para crear una asignacion debes usar la funcion 'crear_asignacion()'.")
         else:
@@ -72,24 +74,31 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
             elif not all(id_persona in personas_asignables for id_persona in personas_seleccionadas):
                 print("¡ATENCIÓN!: El ID de persona otorgado no existe en el diccionario de personas.")
 
-def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int):
+def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion=""):
     """Elimina una asignación en base al ID de una tarea
 
     Args:
         matriz_asignaciones (list): Matriz de asignaciones a la cual se le quiere eliminar una asignación
         id_tarea (int): ID de la tarea que se quiere eliminar
+        confirmacion (str): Si se coloca "Eliminar" se salta la verificacion
     """    
     # En caso de que el ID de la tarea esté presente dentro de la matriz de asignaciones, la elimina, de ser confirmado por el usuario. De lo contrario, notifica al usuario de la inconveniencia.
     id_taraes_existente = False
     for i in range(1, len(matriz_asignaciones)):
         if matriz_asignaciones[i][1] == id_tarea:
             id_taraes_existente = True
-            confirmacion = input(f"Para confirmar la eliminación del la tarea cuyo ID es {id_tarea}, escriba 'Eliminar': ")
-            if confirmacion == "Eliminar":
+            if confirmacion != "Eliminar":
+                confirmacion = input(f"Para confirmar la eliminación del la tarea cuyo ID es {id_tarea}, escriba 'Eliminar': ")
+            else:
                 del matriz_asignaciones[i]
+                break
+            if confirmacion == "Eliminar" or confirmacion == "eliminar":
+                del matriz_asignaciones[i]
+                print()
                 print(f"Info: Se ha eliminado la asignación de la tarea {id_tarea}.")
                 break
             else:
+                print()
                 print("Info: No se ha eliminado ningún dato.")
     if not id_taraes_existente:
         print("¡ATENCIÓN!: El ID de tarea otorgado no existe en la matriz asignaciones.")
