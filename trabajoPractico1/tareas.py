@@ -91,7 +91,7 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
     Returns:
     mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
-    nuevo_id = max(diccionario.keys()) + 1
+    nuevo_id = max(diccionario.keys()) + 1 # Esta nueva forma de obtener el ID evita que se solape con un ID de una tarea eliminada
     fecha_valida, fecha_corregida = validar_fecha(fecha)
     if validar_diccionario_tareas(diccionario) and fecha_valida:
         estado = 1

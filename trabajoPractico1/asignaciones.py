@@ -47,13 +47,14 @@ def crear_asignacion(matriz_asignaciones: list, personas_asignables: list, tarea
             return mensaje_de_situacion
         else:
             mensaje_de_situacion ="¡ATENCIÓN!: la tarea que intentas asignar ya está asignada a otro grupo de personas. Para editarla, debes usar la funcion 'actualizar_asignacion()'"
-            return
+            return mensaje_de_situacion
     else:
         if not(id_tarea in tareas_asignables):
-            print("¡ATENCIÓN!: El ID otorgado no está registrado en el sistema.")
+            mensaje_de_situacion = "¡ATENCIÓN!: El ID otorgado no está registrado en el sistema."
+            return mensaje_de_situacion
         elif not(all(id_persona in personas_asignables for id_persona in personas_seleccionadas)):
-            print("¡ATENCIÓN!: Uno o más IDs de las personas no existen en el sistema.")
-        print("Info: No se ha concretado la creción de la asignación.")
+            mensaje_de_situacion = "¡ATENCIÓN!: Uno o más IDs de las personas no existen en el sistema."
+            return mensaje_de_situacion
 
 def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, tareas_asignables: list, id_tarea: int, personas_seleccionadas: list):
         """Actualiza una tarea a una lista de personas sólo si los tres existen en el sistema.
@@ -80,9 +81,11 @@ def actualizar_asignacion(matriz_asignaciones: list, personas_asignables: list, 
                 return mensaeje_de_situacion
         else:
             if id_tarea not in tareas_asignables:
-                print("¡ATENCIÓN!: El ID de tarea otorgado no existe en el el diccionario de tareas.")
+                mensaeje_de_situacion = "¡ATENCIÓN!: El ID de tarea otorgado no existe en el el diccionario de tareas."
+                return mensaeje_de_situacion
             elif not all(id_persona in personas_asignables for id_persona in personas_seleccionadas):
-                print("¡ATENCIÓN!: El ID de persona otorgado no existe en el diccionario de personas.")
+                mensaeje_de_situacion = "¡ATENCIÓN!: El ID de persona otorgado no existe en el diccionario de personas."
+                return mensaeje_de_situacion
 
 def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion=""):
     """Elimina una asignación en base al ID de una tarea
@@ -103,6 +106,8 @@ def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion="
                 confirmacion = input(f"Para confirmar la eliminación del la tarea cuyo ID es {id_tarea}, escriba 'Eliminar': ")
             else:
                 del matriz_asignaciones[i]
+                mensaeje_de_situacion = f"Info: Se ha eliminado la asignación de la tarea {id_tarea}."
+                return mensaeje_de_situacion
                 break
             if confirmacion == "Eliminar" or confirmacion == "eliminar":
                 del matriz_asignaciones[i]
@@ -112,4 +117,5 @@ def eliminar_asignacion(matriz_asignaciones: list, id_tarea: int, confirmacion="
                 mensaeje_de_situacion = "Info: No se ha eliminado ningún dato."
                 return mensaeje_de_situacion
     if not id_taraes_existente:
-        print("¡ATENCIÓN!: El ID de tarea otorgado no existe en la matriz asignaciones.")
+        mensaeje_de_situacion = "¡ATENCIÓN!: El ID de tarea otorgado no existe en la matriz asignaciones."
+        return mensaeje_de_situacion
