@@ -8,7 +8,7 @@
     "2": {
         "descripcion": "completar el diagrama para el cliente",
         "fecha_límite": "27-10-2024",
-        "estado": 0
+        "estado": 1
     },
     "3": {
         "descripcion": "analizar el plan en línea",
