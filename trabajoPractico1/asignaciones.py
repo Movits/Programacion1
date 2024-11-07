@@ -38,10 +38,12 @@ def crear_asignacion(matriz_asignaciones: list, personas_asignables: list, tarea
     """    
     # Se verifica que tanto el ID de la tarea como los IDs de las personas existan dentro de los diccionarios correspondientes.
     if id_tarea in tareas_asignables and all(id_persona in personas_asignables for id_persona in personas_seleccionadas):
+        # El Max de abajo permite obtener el ID máximo de la lista, y se le suma 1 para añadirlo a la matriz luego. Sin embargo, si la lista quedó vacía la momento de ser evaluada (luego de que se hayan vaciado todas las asignaciones), se establecerá por defecto un ID 1, ya que se asigno el default a 0, y se le suma 1.
+        id_nuevo = max([asignacion[0] for asignacion in matriz_asignaciones[1:]], default=0) + 1
         # Generando una lista con todos los IDs de tareas presentes en la matriz, verifica que el ID de tarea otorgado no este dentro de la nueva lista.
         if id_tarea not in [fila[1] for fila in matriz_asignaciones[1:]]:
             mensaje_de_situacion = "Info: Tarea asignada"
-            matriz_asignaciones.append([len(matriz_asignaciones),id_tarea, personas_seleccionadas])
+            matriz_asignaciones.append([id_nuevo,id_tarea, personas_seleccionadas])
             return mensaje_de_situacion
         else:
             mensaje_de_situacion ="¡ATENCIÓN!: la tarea que intentas asignar ya está asignada a otro grupo de personas. Para editarla, debes usar la funcion 'actualizar_asignacion()'"

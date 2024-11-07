@@ -102,8 +102,9 @@ def crear_persona(diccionario: dict, nombre: str, apellido: str, usuario: str, e
         mensaeje_de_situacion (str): Mensaje del resultado del proceso
     """    
     #Cargo los datos, de ser válida, en el diccionario.
+    nuevo_id = max(diccionario.keys()) + 1
     if validar_diccionario_personas(diccionario):
-        diccionario[len(diccionario)] = {
+        diccionario[nuevo_id] = {
             "nombre_completo": (nombre, apellido),
             "usuario": usuario,
             "email": email,

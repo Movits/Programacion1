@@ -91,10 +91,11 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
     Returns:
     mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
+    nuevo_id = max(diccionario.keys()) + 1
     fecha_valida, fecha_corregida = validar_fecha(fecha)
     if validar_diccionario_tareas(diccionario) and fecha_valida:
         estado = 1
-        diccionario[len(diccionario)]={
+        diccionario[nuevo_id]={
             "descripcion": tarea,
             "fecha_límite": fecha_corregida,
             "estado": estado
