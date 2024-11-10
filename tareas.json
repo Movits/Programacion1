@@ -1,0 +1,23 @@
+{
+    "0": "tareas",
+    "1": {
+        "descripcion": "presentar la base de datos para el jefe",
+        "fecha_límite": "18-12-2024",
+        "estado": 3
+    },
+    "2": {
+        "descripcion": "preparar el gráfico para el cliente",
+        "fecha_límite": "10-11-2024",
+        "estado": 0
+    },
+    "3": {
+        "descripcion": "investigar el esquema para el jefe",
+        "fecha_límite": "11-12-2024",
+        "estado": 2
+    },
+    "4": {
+        "descripcion": "analizar la propuesta para el cliente",
+        "fecha_límite": "30-11-2024",
+        "estado": 1
+    }
+}

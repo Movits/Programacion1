@@ -34,27 +34,20 @@ def validar_nombre_completo(nombre: str,apellido: str):
         nombre_completo (tuple): Tupla que contiene el nombre y el apellido validados.
     """    
     try:
-        nombre_ = nombre
-        apellido_ = apellido
-        nombre_valido = nombre.isalpha()
-        apellido_valido = apellido.isalpha()
-        if not nombre_valido:
-            print()
+        is_alpha = lambda x: x.isalpha()  # Lambda function to check if a string contains only alphabetic characters
+
+        if not is_alpha(nombre):
             print("ATENCIÓN: El nombre ingresado es inválido. Debe poseer sólo caracteres alfabéticos.")
-            while not nombre_valido:
-                nombre_ = input("Reingrese el nombre: ")
-                print()
-                if nombre_.isalpha():
-                    nombre_valido = True
-        elif not apellido_valido:
-            print()
+            while not is_alpha(nombre):
+                nombre = input("Reingrese el nombre: ")
+        
+        if not is_alpha(apellido):
             print("ATENCIÓN: El apellido ingresado es inválido. Debe poseer sólo caracteres alfabéticos.")
-            while not apellido_valido:
-                apellido_ = input("Reingrese el apellido: ")
-                print()
-                if apellido_.isalpha():
-                    apellido_valido = True
-        return nombre_, apellido_
+            while not is_alpha(apellido):
+                apellido = input("Reingrese el apellido: ")
+                
+        return nombre, apellido
+
     except AttributeError:
         raise Exception(f"El/los atributo(s) pasado(s), '{nombre}' y/o '{apellido}', no son de tipo str, son de tipo {type(nombre)} y {type(apellido)}")
 
@@ -175,19 +168,35 @@ def generar_usuario(nombre: str, apellido: str, diccionario: dict):
         str: Nombre de usuario único generado
     """
     usuario_base = f"{nombre[0].lower()}{apellido.lower()}"
+    usuarios_existentes = {persona["usuario"] for persona in diccionario.values() if isinstance(persona, dict)}
+
     usuario = usuario_base
     cont = 1
-    usuarios_existentes = set()
-    for persona in diccionario.values(): #Recorro el diccionario para verificar si el usuario ya existe.
-        if isinstance(persona, dict) and "usuario" in persona:
-            usuarios_existentes.add(persona["usuario"])
-    while usuario in usuarios_existentes: 
+    while usuario in usuarios_existentes:
         usuario = f"{usuario_base}{cont}" 
         cont += 1
     return usuario
-    
-    diccionario[id]["usuario"] = nuevo_usuario
-    
+
+def actualizar_usuario(diccionario, id_persona, nuevo_usuario):
+    """
+    Updates the username for a person if it’s not already taken.
+
+    Args:
+        diccionario (dict): The main dictionary of persons.
+        id_persona (int): The ID of the person to update.
+        nuevo_usuario (str): The new username.
+    """
+    if validar_diccionario_personas(diccionario):
+        if id_persona not in diccionario:
+            return f"Error: The ID '{id_persona}' is not found in the dictionary."
+        else:
+            usuarios_existentes = {persona["usuario"] for persona in diccionario.values() if isinstance(persona, dict)}
+            if nuevo_usuario in usuarios_existentes:
+                return "Error: The username is already taken."
+            else:
+                diccionario[id_persona]["usuario"] = nuevo_usuario
+                return "Info: Username updated successfully."
+
     
 def generar_contrasenia():
     """
@@ -210,6 +219,16 @@ def validar_contrasenia(contrasenia: str):
         posee_numero = re.search(r"\d", contrasenia)
     return contrasenia
 
+def actualizar_contrasenia(diccionario, id_persona, nueva_contrasenia):
+    """
+    Actualiza la contraseña de una persona si el ID es válido y la contraseña es válida.
+    """
+    if validar_diccionario_personas(diccionario) and id_persona in diccionario:
+        diccionario[id_persona]["contrasenia"] = validar_contrasenia(nueva_contrasenia)
+        return "Info: Contraseña actualizada correctamente."
+    return "Error: ID no encontrado o diccionario inválido."
+
+
 def generar_email(nombre: str, apellido: str):
     """
     Genera una dirección de correo electrónico usando el nombre y apellido dados, seleccionando un dominio aleatorio.
@@ -226,21 +245,28 @@ def generar_email(nombre: str, apellido: str):
     return email
 
 def validar_email(diccionario: dict, email: str):
-    for id_persona in diccionario.keys():
-        if id_persona == 0:
-            continue
-        else:
-            if diccionario[id_persona]["email"] == email:
-                email_preexistente = True
-                while email_preexistente:
-                    print("Info: El email ingresado ya está vincuado a otro usuario.")
-                    email = input("Ingrese otro email: ")
-                    if diccionario[id_persona]["email"] != email:
-                        email_preexistente = False
+    existing_emails = [persona["email"] for id_persona, persona in diccionario.items() if id_persona != 0]
+    email_preexistente = email in existing_emails
+    
+    while email_preexistente:
+        print("Info: El email ingresado ya está vinculado a otro usuario.")
+        email = input("Ingrese otro email: ")
+        email_preexistente = email in existing_emails
+
     while not re.match(r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}", email):
         print("Info: Email con formato inválido. Por favor, verifique su entrada.")
         email = input("Reingrese el email correctamente: ")
     return email
+
+def actualizar_email(diccionario, id_persona, nuevo_email):
+    """
+    Actualiza el email de una persona si el ID es válido y el email es válido.
+    """
+    if validar_diccionario_personas(diccionario) and id_persona in diccionario:
+        diccionario[id_persona]["email"] = validar_email(diccionario, nuevo_email)
+        return "Info: Email actualizado correctamente."
+    return "Error: ID no encontrado o diccionario inválido."
+
 
 def generar_telefono():
     """
@@ -268,3 +294,12 @@ def validar_telefono(diccionario: dict, telefono: str):
         print("Info: Teléfono ingresado con formato inválido. Por favor, verifique su entrada. (###-####-####)")
         telefono = input("Reingrese el teléfono correctamente: ")
     return telefono
+
+def actualizar_telefono(diccionario, id_persona, nuevo_telefono):
+    """
+    Actualiza el teléfono de una persona si el ID es válido y el teléfono es válido.
+    """
+    if validar_diccionario_personas(diccionario) and id_persona in diccionario:
+        diccionario[id_persona]["telefono"] = validar_telefono(diccionario, nuevo_telefono)
+        return "Info: Teléfono actualizado correctamente."
+    return "Error: ID no encontrado o diccionario inválido."

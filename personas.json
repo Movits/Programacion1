@@ -1,0 +1,83 @@
+{
+    "0": "personas",
+    "1": {
+        "nombre_completo": [
+            "ana",
+            "torres"
+        ],
+        "usuario": "atorres",
+        "email": "anatorres@gmail.com",
+        "telefono": "011-3151-9409",
+        "contrasenia": "s:6Kjh),"
+    },
+    "2": {
+        "nombre_completo": [
+            "ana",
+            "martínez"
+        ],
+        "usuario": "amartínez",
+        "email": "anamartínez@outlook.com",
+        "telefono": "011-3709-1996",
+        "contrasenia": "Y\"F-`\\&_"
+    },
+    "3": {
+        "nombre_completo": [
+            "ana",
+            "torres"
+        ],
+        "usuario": "atorres1",
+        "email": "anatorres@gmail.com",
+        "telefono": "011-5644-5026",
+        "contrasenia": "}xR$:t;y"
+    },
+    "4": {
+        "nombre_completo": [
+            "carlos",
+            "lópez"
+        ],
+        "usuario": "clópez",
+        "email": "carloslópez@hotmail.com",
+        "telefono": "011-2480-4114",
+        "contrasenia": "n\"rl(/`x"
+    },
+    "5": {
+        "nombre_completo": [
+            "sofía",
+            "rodríguez"
+        ],
+        "usuario": "srodríguez",
+        "email": "sofíarodríguez@yahoo.com",
+        "telefono": "011-7295-4490",
+        "contrasenia": "(,3SLZO/"
+    },
+    "6": {
+        "nombre_completo": [
+            "carlos",
+            "pérez"
+        ],
+        "usuario": "cpérez",
+        "email": "carlospérez@gmail.com",
+        "telefono": "011-3750-5861",
+        "contrasenia": "u%->&+r@"
+    },
+    "7": {
+        "nombre_completo": [
+            "maría",
+            "gómez"
+        ],
+        "usuario": "mgómez",
+        "email": "maríagómez@hotmail.com",
+        "telefono": "011-1674-8077",
+        "contrasenia": "V}Mir,0n"
+    },
+    "8": {
+        "nombre_completo": [
+            "luis",
+            "gómez"
+        ],
+        "usuario": "lgómez",
+        "email": "luisgómez@gmail.com",
+        "telefono": "011-3031-4398",
+        "contrasenia": "ch*c-{k@"
+    }
+}
