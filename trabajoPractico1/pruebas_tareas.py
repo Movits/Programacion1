@@ -24,7 +24,8 @@ print()
 
 print("CREACIÓN DE UNA TAREA")
 print("NOTA: Se genear una tarea cuya descripción es 'Ver la tele en el cuarto de Tiago' y su fecha límite es el 1/12/2024. Por defecto, al crearse una tarea, siempre se le asignará el estado pendiente (1).")
-tareas.crear_tarea(diccionario_tareas, "Ver la tele en el cuarto de Tiago", datetime.date(2024, 11, 12))
+mensaje = tareas.crear_tarea(diccionario_tareas, "Ver la tele en el cuarto de Tiago", datetime.date(2024, 11, 12))
+print(mensaje)
 for key, valor in diccionario_tareas.items():
     if isinstance(valor, dict):
         print(f"ID: {key}, Descripción: {valor['descripcion']}, Fecha límite: {valor['fecha_límite']}, Estado: {valor['estado']}")

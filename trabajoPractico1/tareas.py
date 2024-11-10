@@ -57,7 +57,8 @@ def generar_fecha():
     hoy = datetime.date.today()
     fecha_minima = hoy - datetime.timedelta(days = 15)
     fecha_maxima = hoy + datetime.timedelta(days = 60)
-    fecha = random.uniform(fecha_minima, fecha_maxima)
+    dias_random = random.randint(-15, 60)
+    fecha = hoy + datetime.timedelta(days = dias_random)
     return fecha
 
 def generar_diccionario_tareas(cantidad):
@@ -91,17 +92,22 @@ def crear_tarea(diccionario: dict, tarea: str, fecha:  datetime.date,):
     Returns:
     mensaeje_de_situacion (str): Mensaje que indica el resultado del proceso
     """
+    
+    if not validar_diccionario_tareas(diccionario):
+        return "Error: Diccionario de tareas no válido."
+    
     nuevo_id = max(diccionario.keys()) + 1 # Esta nueva forma de obtener el ID evita que se solape con un ID de una tarea eliminada
     fecha_valida, fecha_corregida = validar_fecha(fecha)
-    if validar_diccionario_tareas(diccionario) and fecha_valida:
-        estado = 1
-        diccionario[nuevo_id]={
-            "descripcion": tarea,
-            "fecha_límite": fecha_corregida,
-            "estado": estado
-        }
-        mensaeje_de_situacion = "Info: Se ha creado una nueva tarea (Por defecto siempre se le asigna el estado de Pendiente al ser creada)."
-        return mensaeje_de_situacion
+    if not fecha_valida:
+        return "Error: Fecha no válida para crear la tarea."
+    
+    estado = 1  # Estado por defecto al crear tarea
+    diccionario[nuevo_id] = {
+        "descripcion": tarea,
+        "fecha_límite": fecha_corregida,
+        "estado": estado
+    }
+    return "Info: Se ha creado una nueva tarea con estado Pendiente."
 
 def actualizar_tarea(diccionario: dict, id: str, tarea: str, fecha: str, estado: int):
     """
