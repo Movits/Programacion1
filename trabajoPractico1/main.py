@@ -5,6 +5,32 @@ import datetime
 import json
 import os
 
+def obtener_matriz_personas_recursivamente(archivo, matriz_asignaciones=[]):
+    """Le una matriz de personas de manera recursiva
+
+    Args:
+        archivo (TextIOWrapper): Archivo con los datos de las asignaciones
+        matriz_asignaciones (list, opcional): La matriz de asignaciones hasta el momento leída.
+
+    Returns:
+        asignaciones (list): Matriz de asignaciones obtenida.
+    """    
+    linea = archivo.readline().strip()
+    if not linea:
+        return matriz_asignaciones  # Caso final: Si no hay mas líneas, devuelve la matriz terminada
+    
+    # Añade el encabezado a la matriz generada y lee los elementos de las siguientes líneas
+    if linea != "asignaciones":
+        id_asignacion, id_tarea, string_personas = linea.split(",")
+        id_asignacion = int(id_asignacion)
+        id_tarea = int(id_tarea)
+        personas = list(map(int, string_personas.split("|")))
+        matriz_asignaciones.append([id_asignacion, id_tarea, personas])
+    else:
+        matriz_asignaciones.append(linea)
+    
+    return obtener_matriz_personas_recursivamente(archivo, matriz_asignaciones)
+
 # Lectura de datos
 def leer_archivo_personas():
     """
@@ -116,18 +142,7 @@ def leer_archivo_asignaciones():
     # Se aplica manejo de excepciones en todos los casos posibles de fallo de lectura/escritura del archivo txt.
     try:
         with open("asignaciones.txt", "r", encoding="UTF-8") as arch_asignaciones:
-            # Se leen los datos del archivo asignaciones.txt y se los convierte a cada formato correspondiente para que sean entendibles por las funciones de los otros modulos.
-            for linea in arch_asignaciones:
-                linea = linea.strip()
-                # Salta el primer ciclo ya que es el nombre de la matriz
-                if linea == "asignaciones":
-                    matriz_asignaciones.append(linea)
-                    continue
-                id_asignacion, id_tarea, string_personas = linea.split(",")
-                id_asignacion = int(id_asignacion)
-                id_tarea = int(id_tarea)
-                personas = list(map(int, string_personas.split("|")))
-                matriz_asignaciones.append([id_asignacion, id_tarea, personas])
+            matriz_asignaciones = obtener_matriz_personas_recursivamente(arch_asignaciones)
             print("Info: Se ha leído correctamente los datos del archivo asignaciones.txt")
             return matriz_asignaciones
     except FileNotFoundError:
@@ -454,7 +469,10 @@ while True:
                         personas_asignadas.append(persona)
                     else:
                         break
-                mensaeje_de_situacion = asignaciones.crear_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+                if len(personas_asignadas) > 0:
+                    mensaeje_de_situacion = asignaciones.crear_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+                else:
+                    mensaeje_de_situacion = "Info: No se ha asignado a ninguna persona al no haber proporcionado ninguna."
             else:
                 mensaeje_de_situacion = "Volviendo al menú principal... "
 
@@ -478,7 +496,10 @@ while True:
                         personas_asignadas.append(persona)
                     else:
                         break
-                mensaeje_de_situacion = asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+                if len(personas_asignadas) > 0:
+                    mensaeje_de_situacion = asignaciones.actualizar_asignacion(matriz_asignaciones, list(diccionario_personas.keys()), list(diccionario_tareas.keys()), id_tarea, personas_asignadas)
+                else: 
+                    mensaeje_de_situacion = "Info: No se ha actualizado ninguna asignación al no haberse proporcionado ninguna persona"
             else:
                 mensaeje_de_situacion = "Volviendo al menú principal... "
 
@@ -688,12 +709,15 @@ while True:
             print("Eliminar persona")
             id_persona = solicitar_entero("Ingrese el ID de la persona que desee eliminar (Ingrese -1 para volver): ")
             if id_persona != -1:
-                personas.eliminar_persona(diccionario_personas, id_persona)
+                mensaeje_de_situacion = personas.eliminar_persona(diccionario_personas, id_persona)
                 # Elimino todas las vinculaciones que tenga la persona en las asignaciones
                 for asignacion in matriz_asignaciones[1:]:
                     personas_asignadas = asignacion[2]
                     if id_persona in personas_asignadas:
                         personas_asignadas.remove(id_persona)
+                    # Verifica si una asignación se quedó sin personas asignadas. De ser así, elimina directamente la asignación
+                    if len(asignacion[2]) == 0:
+                        del matriz_asignaciones[asignacion[0]]
             else:
                 mensaeje_de_situacion = "Volviendo al menú principal..."
         
